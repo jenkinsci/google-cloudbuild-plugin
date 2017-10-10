@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jenkins-ci.plugins</groupId>
+    <artifactId>plugin</artifactId>
+    <version>2.36</version>
+  </parent>
+
+  <artifactId>google-cloudbuild</artifactId>
+  <packaging>hpi</packaging>
+  <name>Google Cloud Container Builder Plugin</name>
+  <version>0.1-SNAPSHOT</version>
+  <description>
+    This plugin provides the "Google Cloud Container Builder" build step for creating and running
+    Docker container images in the Google Cloud environment from application source code.
+  </description>
+  <inceptionYear>2017</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>Google</name>
+    <url>https://www.google.com</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>agoulti</id>
+      <name>Alexandra Goultiaeva</name>
+    </developer>
+    <developer>
+      <id>bwkimmel</id>
+      <name>Brad Kimmel</name>
+    </developer>
+  </developers>
+
+  <repositories>
+    <!-- get every artifact through repo.jenkins-ci.org, which proxies all
+         the artifacts that we need -->
+    <repository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/public/</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <configuration>
+          <!-- With the default setting an older version of jackson from core is used, resulting in:
+            java.lang.NoSuchMethodError: com.fasterxml.jackson.core.JsonFactory.requiresPropertyOrdering()Z
+              at com.fasterxml.jackson.databind.ObjectMapper.<init>(ObjectMapper.java:571)
+              at com.fasterxml.jackson.databind.ObjectMapper.<init>(ObjectMapper.java:489)
+              at com.google.jenkins.plugins.cloudbuild.YamlUtil.toJson(YamlUtil.java:17)
+          -->
+          <pluginFirstClassLoader>true</pluginFirstClassLoader>
+
+          <!--
+            The "hpi:assemble-dependencies" command will assemble the plugin and all of its
+            dependencies into target/plugins/, which can be copied into the /usr/share/jenkins/ref
+            directory when building a Jenkins based Docker container. However, the Jenkins Docker
+            container will not properly handle plugin upgrades unless:
+
+             (1) The .jpi extension is used (rather than .hpi extension), AND
+             (2) The version number has advanced.
+
+            To satisfy (2), we use the Maven build timestamp so that the version number will be
+            interpreted as having advanced for each new snapshot build when developing.
+          -->
+          <pluginVersionDescription>${maven.build.timestamp}</pluginVersionDescription>
+          <useJpiExtension>true</useJpiExtension>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <properties>
+    <java.level>8</java.level>
+    <jackson.version>2.9.0</jackson.version>
+    <jenkins.version>2.60</jenkins.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-cloudbuild</artifactId>
+      <version>v1-rev597-1.22.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>google-oauth-plugin</artifactId>
+      <version>0.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>structs</artifactId>
+      <version>1.10</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-step-api</artifactId>
+      <version>2.12</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-storage</artifactId>
+      <version>v1-rev109-1.22.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>2.10.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-job</artifactId>
+      <version>2.12.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-cps</artifactId>
+      <version>2.40</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jenkins-ci.plugins.workflow</groupId>
+          <artifactId>workflow-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-durable-task-step</artifactId>
+      <version>2.15</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jenkins-ci.plugins.workflow</groupId>
+          <artifactId>workflow-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-basic-steps</artifactId>
+      <version>2.6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-api</artifactId>
+      <version>2.22</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>
+

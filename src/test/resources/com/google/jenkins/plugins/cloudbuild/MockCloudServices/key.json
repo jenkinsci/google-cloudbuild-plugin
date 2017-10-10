@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "test-project",
+  "private_key_id": "01234567890abcdef01234567890abcdef012345",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIICeQIBADANBgkqhkiG9w0BAQEFAASCAmMwggJfAgEAAoGBAMUk6aeD+Dsokqks\nX9SmyI88wCrC/ifIv/3kZ8CaRwZ5z4Xp62ux2bVwGqA6GmMn/Z0O0brK9Ahx7IjQ\nLJaSv7Mw00tpJB3bNKZpIVRYpVZ8tLTs2LnYXgaHONjTPFN9fHbnIy3LmFNuIAx8\nZd5+YnOH3AtZhObXNQlKEJOxCN4jAgMA/zkCgYEAk9EQQH90OKjOYe2wYpVSTLP8\nWuGp4REviB911v4yov7wQhCHeS8Elwbz/uKxAypRpMcztcCQfUVx2IBQozkRscUW\nMMR7KIIXpZLoyFNGHJJRoeSsSNM3uYPW+1BHeiCPMiOVdNPeCx+X9aQNtoCJcbYw\ncigKldRXeQtWTq2fCKkCQQD45KhmiDNRkmx7gFStmoCaWxUn4E1DtiDyw2Qk3va1\ny443dwkBd5E+uLRJvTfDWF1ZlGFU34gPGBCC9ELcpDHzAkEAysX7zpB/0OSyGgyZ\nL01HiAUUvy14aeQ12m7dfMcrL2vKPQMTDwFu5hnpxhrpRqPmRIrNBJ9nlRZwgGz7\nMb5/EQJBAMcnd+S9xjVN9hRvKfZ7sm7WgYcXeeKbGKjUC2Ahd2KjpxIuHxFKCnPg\n+/YPL6Hj/fI1HU603+va0YTVjLbVO3kCQQDADctlgdPMqPoTA6tDjtHPZVwIrDJt\n2JPA09ImnamzGlaZe8VmfvwopBGK5gQRECkPpeZbLVEuHuFOODXHH3U5AkEApbbe\nN9BnsQR3/rHrX+/SWxOBTcddCkhg4boqekQXFhXIk0POS6DFqf/Gy9Tv5GPU+jOq\nze5KCQng6I+1HaZ+4Q==\n-----END PRIVATE KEY-----",
+  "client_email": "test-service@test-project",
+  "client_id": "123456789012345678901",
+  "auth_uri": "https://foo.bar/o/oauth2/auth",
+  "token_uri": "https://foo.bar/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://foo.bar/oauth2/v1/certs",
+  "client_x509_cert_url": "https://foo.bar/robot/v1/metadata/x509/test-service%40test-project"
+}

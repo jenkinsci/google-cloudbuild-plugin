@@ -1,0 +1,15 @@
+{
+  "source": {
+    "storageSource": {
+      "bucket": "foo",
+      "object": "main.tgz"
+    }
+  },
+  "steps": [{
+    "name": "gcr.io/foo-test/main",
+    "args": ["bash", "-c", "go run main.go > /workspace/test.go"]
+  }, {
+    "name": "gcr.io/cloud-builders/gsutil",
+    "args": ["cp", "/workspace/test.go", "gs://foo/$BUILD_ID/test.go"]
+  }]
+}

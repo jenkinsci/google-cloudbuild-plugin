@@ -1,0 +1,9 @@
+# Build output.
+target/
+
+# IntelliJ project files.
+.idea/
+*.iml
+
+# Jenkins home directory when running "mvn hpi:run".
+work/
