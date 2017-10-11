@@ -73,6 +73,7 @@
       <plugin>
         <groupId>org.jenkins-ci.tools</groupId>
         <artifactId>maven-hpi-plugin</artifactId>
+        <version>2.1</version>
         <configuration>
           <!-- With the default setting an older version of jackson from core is used, resulting in:
             java.lang.NoSuchMethodError: com.fasterxml.jackson.core.JsonFactory.requiresPropertyOrdering()Z
