@@ -73,6 +73,7 @@ public class CloudBuildStepTest {
       assertEquals("Hello, World!", build.getSubstitutions().get("_MESSAGE"));
       assertEquals("bucket", build.getSource().getStorageSource().getBucket());
       assertEquals("object/path/source.tgz", build.getSource().getStorageSource().getObject());
+      assertEquals("11655.900000000s", build.getTimeout());
       return new Operation()
           .setName("build-42")
           .setMetadata(new BuildOperationMetadata()

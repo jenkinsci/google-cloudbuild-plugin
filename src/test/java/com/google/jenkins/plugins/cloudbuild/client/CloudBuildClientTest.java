@@ -116,7 +116,7 @@ public class CloudBuildClientTest {
                 "- name: ubuntu\n" +
                 "  args: [echo, hello, world]";
         assertEquals(
-            "build-42", cloudBuild.sendBuildRequest(request, null, Collections.emptyMap()));
+            "build-42", cloudBuild.sendBuildRequest(request, null, Collections.emptyMap(), null));
         return true;
       }
     });

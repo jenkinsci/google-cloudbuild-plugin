@@ -88,7 +88,8 @@ public final class CloudBuildStepExecution extends StepExecution {
     buildId = getClients().cloudBuild().sendBuildRequest(
         input.getRequest().expand(context),
         input.getSourceOrDefault().prepare(context, getClients()),
-        input.getSubstitutionMap(context));
+        input.getSubstitutionMap(context),
+        input.getTimeoutDuration());
     startPolling();
     return false;
   }

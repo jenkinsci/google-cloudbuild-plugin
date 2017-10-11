@@ -18,10 +18,13 @@ import com.google.jenkins.plugins.cloudbuild.request.CloudBuildRequest;
 import com.google.jenkins.plugins.cloudbuild.source.CloudBuildSource;
 import com.google.jenkins.plugins.credentials.domains.RequiresDomain;
 import hudson.Extension;
+import hudson.Util;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.util.FormValidation;
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -32,6 +35,7 @@ import javax.annotation.Nonnull;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 /** All inputs required to submit a Google Cloud Container Builder build request. */
@@ -51,6 +55,9 @@ public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> im
 
   @CheckForNull
   private SubstitutionList substitutionList;
+
+  @CheckForNull
+  private String timeout;
 
   @DataBoundConstructor
   public CloudBuildInput(@Nonnull String credentialsId, @Nonnull CloudBuildRequest request) {
@@ -98,6 +105,23 @@ public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> im
   }
 
   @DataBoundSetter
+  public void setTimeout(String timeout) {
+    this.timeout = Util.fixEmptyAndTrim(timeout);
+  }
+
+  @CheckForNull
+  public String getTimeout() {
+    return timeout;
+  }
+
+  public Duration getTimeoutDuration() {
+    if (timeout == null) {
+      return null;
+    }
+    return DurationUtil.parseOrNull(timeout);
+  }
+
+  @DataBoundSetter
   public void setSubstitutions(Map<String, String> substitutions) {
     List<Substitution> items = new ArrayList<>();
     substitutions.forEach((key, value) -> items.add(new Substitution(key, value)));
@@ -139,6 +163,20 @@ public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> im
         formData.remove("source");
       }
       return super.newInstance(req, formData);
+    }
+
+    public FormValidation doCheckTimeout(@QueryParameter String value) {
+      value = Util.fixEmptyAndTrim(value);
+      if (value == null) {
+        return FormValidation.ok();
+      }
+      Duration duration = DurationUtil.parseOrNull(value);
+      if (duration == null) {
+        return FormValidation.error("Invalid timeout.");
+      } else if (duration.isNegative() || duration.isZero()) {
+        return FormValidation.error("Timeout must be positive.");
+      }
+      return FormValidation.ok();
     }
   }
 }

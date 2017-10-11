@@ -65,6 +65,7 @@ public class CloudBuildBuilderTest {
     input.setSubstitutionList(new SubstitutionList(Arrays.asList(
         new Substitution("_MESSAGE", "Hello, World!"),
         new Substitution("_JOB_NAME", "$JOB_NAME"))));
+    input.setTimeout("3h14m15.9s");
     project.getBuildersList().add(new CloudBuildBuilder(input));
 
     project = j.configRoundtrip(project);
@@ -78,6 +79,7 @@ public class CloudBuildBuilderTest {
       assertEquals("test-job", build.getSubstitutions().get("_JOB_NAME"));
       assertEquals("bucket", build.getSource().getStorageSource().getBucket());
       assertEquals("object/path/source.tgz", build.getSource().getStorageSource().getObject());
+      assertEquals("11655.900000000s", build.getTimeout());
       return new Operation()
           .setName("build-42")
           .setMetadata(new BuildOperationMetadata()
