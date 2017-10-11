@@ -41,7 +41,7 @@ import org.jvnet.hudson.test.JenkinsRule;
 /** Integration tests for {@link CloudBuildStep}. */
 public class CloudBuildStepTest {
   private static final String RESOURCE_BASE =
-      "/com/google/jenkins/plugins/cloudbuild/CloudBuildStepIT/";
+      "/com/google/jenkins/plugins/cloudbuild/CloudBuildStepTest/";
 
   @Rule
   public JenkinsRule j = new JenkinsRule();

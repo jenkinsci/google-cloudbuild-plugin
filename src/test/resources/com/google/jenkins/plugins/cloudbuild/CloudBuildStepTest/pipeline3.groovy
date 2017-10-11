@@ -11,14 +11,18 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.google.jenkins.plugins.cloudbuild.CloudBuildStepIT
+package com.google.jenkins.plugins.cloudbuild.CloudBuildStepTest
 
 node {
+    writeFile file: 'cloudbuild.yaml', text: '''
+        steps:
+        - name: alpine
+    '''
+
+    writeFile file: 'src/foo.txt', text: 'foo'
+
     googleCloudBuild \
         credentialsId: 'test-project',
-        source: repo(projectId: 'some-other-project', repoName: 'test-repo', tag: '3.14.159'),
-        request: inline('''
-            steps:
-                - name: alpine
-        ''')
+        source: local('src'),
+        request: file('cloudbuild.yaml')
 }
