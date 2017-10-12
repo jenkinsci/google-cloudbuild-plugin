@@ -57,7 +57,7 @@ public final class CloudBuildStep extends Step implements Serializable {
   public static class Descriptor extends StepDescriptor {
     @Override @Nonnull
     public String getDisplayName() {
-      return "Execute Google Cloud Container Builder";
+      return Messages.CloudBuildStep_DisplayName();
     }
 
     @Override

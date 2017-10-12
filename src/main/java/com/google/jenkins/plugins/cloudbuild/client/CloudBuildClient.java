@@ -66,12 +66,12 @@ public class CloudBuildClient {
    */
   public String sendBuildRequest(String request, Source source, Map<String, String> substitutions)
       throws IOException {
-    logger.println("Google Cloud Container Builder is being executed!");
+    logger.println(Messages.CloudBuildClient_StartingBuildRequest());
     logger.println(request);
-    logger.println("projectId: " + projectId);
+    logger.println(Messages.CloudBuildClient_ProjectId(projectId));
 
     if (projectId == null) {
-      throw new AbortException("projectId must be specified");
+      throw new AbortException(Messages.CloudBuildClient_ProjectIdRequired());
     }
     Build buildRequest = RequestProcessor.parseBuildRequest(request)
         .setSource(source)
@@ -79,7 +79,7 @@ public class CloudBuildClient {
     addSourceActions(source);
 
     Operation operation = cloudBuild.projects().builds().create(projectId, buildRequest).execute();
-    logger.println("Operation: " + operation);
+    logger.println(Messages.CloudBuildClient_Operation(operation));
 
     JsonFactory jsonFactory = new JacksonFactory();
     BuildOperationMetadata metadata =
@@ -103,7 +103,7 @@ public class CloudBuildClient {
       Build buildCheck = cloudBuild.projects().builds().get(projectId, buildId).execute();
       String status = buildCheck.getStatus();
 
-      logger.println("Checking build status: " + status);
+      logger.println(Messages.CloudBuildClient_CurrentBuildStatus(status));
       if (status.equals("QUEUED") || status.equals("WORKING")) {
         // Continue iterating
         TimeUnit.SECONDS.sleep(1);
@@ -114,13 +114,14 @@ public class CloudBuildClient {
         break;
       }
 
-      logger.println("Container Build failed. Status: " + status);
+      logger.println(Messages.CloudBuildClient_BuildFailedWithStatus(status));
       logger.println(" -> " + buildCheck.getStatusDetail());
-      logger.println("Log URL: " + buildCheck.getLogUrl());
-      throw new AbortException("Container build failed");
+      logger.println(Messages.CloudBuildClient_LogUrl(buildCheck.getLogUrl()));
+      throw new AbortException(Messages.CloudBuildClient_BuildFailed());
     }
 
-    logger.println("Container Builder operation successful. ID: " + buildId);
+    logger.println(Messages.CloudBuildClient_BuildSucceeded());
+    logger.println(Messages.CloudBuildClient_BuildId(buildId));
   }
 
   /**

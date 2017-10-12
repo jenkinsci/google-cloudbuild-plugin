@@ -49,7 +49,7 @@ public final class Substitution extends AbstractDescribableImpl<Substitution> im
   public static class DescriptorImpl extends Descriptor<Substitution> {
     @Override @Nonnull
     public String getDisplayName() {
-      return "User-defined substitutions to apply to the build request.";
+      return Messages.Substitution_DisplayName();
     }
 
     private static final Pattern KEY_PATTERN = Pattern.compile("_[A-Z0-9_]+");
@@ -67,17 +67,13 @@ public final class Substitution extends AbstractDescribableImpl<Substitution> im
      */
     public FormValidation doCheckKey(@QueryParameter String value) {
       if (value.isEmpty()) {
-        return FormValidation.error("Key must be non-empty.");
+        return FormValidation.error(Messages.Substitution_KeyMustBeNonEmpty());
       }
       if (!KEY_PATTERN.matcher(value).matches()) {
-        return FormValidation.errorWithMarkup(
-            "Key must begin with an underscore and use only numbers, uppercase letters, and " +
-            "underscores (respecting the regular expression <code>_[A-Z0-9_]+</code>). See " +
-            "<a href=\"https://cloud.google.com/container-builder/docs/concepts/build-requests#user-defined_substitutions\">" +
-            "Build Requests - User-defined substitutions</a>.");
+        return FormValidation.errorWithMarkup(Messages.Substitution_InvalidKey_HTML());
       }
       if (value.length() > MAX_KEY_LENGTH) {
-        return FormValidation.error("Key may not be longer than %d characters.", MAX_KEY_LENGTH);
+        return FormValidation.error(Messages.Substitution_KeyTooLong(MAX_KEY_LENGTH));
       }
       return FormValidation.ok();
     }

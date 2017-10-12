@@ -50,12 +50,12 @@ public class InlineCloudBuildRequest extends CloudBuildRequest implements Serial
   public static class DescriptorImpl extends CloudBuildRequestDescriptor {
     @Override @Nonnull
     public String getDisplayName() {
-      return "Inline";
+      return Messages.InlineCloudBuildRequest_DisplayName();
     }
 
     public FormValidation doCheckRequest(@QueryParameter String value) {
       if (value.length() == 0) {
-        return FormValidation.error("Please set a Build Request");
+        return FormValidation.error(Messages.InlineCloudBuildRequest_BuildRequestRequired());
       }
 
       return RequestProcessor.validateBuildRequest(value);

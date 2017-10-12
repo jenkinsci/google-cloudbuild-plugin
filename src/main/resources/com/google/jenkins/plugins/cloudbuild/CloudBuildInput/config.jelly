@@ -13,11 +13,11 @@
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:a="/lib/auth">
-  <a:credentials title="Google Credentials" field="credentialsId" />
-  <f:optionalBlock title="Attach source" name="attachSource" inline="true"
+  <a:credentials title="${%Google Credentials}" field="credentialsId" />
+  <f:optionalBlock title="${%Attach source}" name="attachSource" inline="true"
                    checked="${instance.source != null}">
-    <f:dropdownDescriptorSelector title="Source" field="source" />
+    <f:dropdownDescriptorSelector title="${%Source}" field="source" />
   </f:optionalBlock>
-  <f:dropdownDescriptorSelector title="Request" field="request" />
+  <f:dropdownDescriptorSelector title="${%Request}" field="request" />
   <f:property field="substitutionList"/>
 </j:jelly>

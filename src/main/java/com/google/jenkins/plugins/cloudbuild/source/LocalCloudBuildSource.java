@@ -87,15 +87,16 @@ public class LocalCloudBuildSource extends CloudBuildSource implements Serializa
   public Source prepare(BuildContext context, ClientFactory clients)
       throws IOException, InterruptedException {
     String expandedPath = context.expand(path);
-    context.getListener().getLogger().printf("Preparing local source: %s%n", expandedPath);
+    context.getListener().getLogger().println(
+        Messages.LocalCloudBuildSource_Preparing(expandedPath));
 
     FilePath workspace = context.getWorkspace();
     if (workspace == null) {
-      throw new AbortException("Local cloud build source requires workspace");
+      throw new AbortException(Messages.LocalCloudBuildSource_WorkspaceRequired());
     }
     FilePath root = workspace.child(expandedPath);
     if (!root.exists()) {
-      throw new AbortException("Local cloud build source does not exist");
+      throw new AbortException(Messages.LocalCloudBuildSource_SourcePathDoesNotExist());
     }
 
     CloudStorageClient storage = clients.storage();
@@ -114,7 +115,7 @@ public class LocalCloudBuildSource extends CloudBuildSource implements Serializa
           root.archive(ArchiverFactory.TARGZ, out, new DirScanner.Glob("**", ""));
         } catch (Exception e) {
           e.printStackTrace(listener.getLogger());
-          listener.fatalError("Could not archive source.");
+          listener.fatalError(Messages.LocalCloudBuildSource_CouldNotArchiveSource());
         }
       });
       contents = in;
@@ -135,12 +136,12 @@ public class LocalCloudBuildSource extends CloudBuildSource implements Serializa
   public static class DescriptorImpl extends CloudBuildSourceDescriptor {
     @Override @Nonnull
     public String getDisplayName() {
-      return "Local";
+      return Messages.LocalCloudBuildSource_DisplayName();
     }
 
     public FormValidation doCheckPath(@QueryParameter String value) {
       if (value.isEmpty()) {
-        return FormValidation.error("Path not specified");
+        return FormValidation.error(Messages.LocalCloudBuildSource_PathRequired());
       }
       return FormValidation.ok();
     }

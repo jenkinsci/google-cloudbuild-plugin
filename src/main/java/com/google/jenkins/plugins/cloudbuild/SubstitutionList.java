@@ -67,7 +67,7 @@ public class SubstitutionList extends AbstractDescribableImpl<SubstitutionList> 
   public static class DescriptorImpl extends Descriptor<SubstitutionList> {
     @Override @Nonnull
     public String getDisplayName() {
-      return "User-defined substitutions to apply to the build request.";
+      return Messages.SubstitutionList_DisplayName();
     }
   }
 }

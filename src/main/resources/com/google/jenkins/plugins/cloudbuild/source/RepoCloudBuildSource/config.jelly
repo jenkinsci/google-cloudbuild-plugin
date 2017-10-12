@@ -13,13 +13,13 @@
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-  <f:entry title="Project ID" field="projectId">
+  <f:entry title="${%Project ID}" field="projectId">
     <f:textbox/>
   </f:entry>
-  <f:entry title="Repo Name" field="repoName">
+  <f:entry title="${%Repo Name}" field="repoName">
     <f:textbox/>
   </f:entry>
-  <f:entry title="Revision" field="revisionType">
+  <f:entry title="${%Revision}" field="revisionType">
     <f:select/>
   </f:entry>
   <f:entry title="" field="revision">

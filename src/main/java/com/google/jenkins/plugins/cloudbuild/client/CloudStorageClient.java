@@ -82,7 +82,7 @@ public class CloudStorageClient {
    */
   public void putCloudFiles(String bucket, String object, String type, InputStream data)
       throws IOException {
-    listener.getLogger().println("Uploading files");
+    listener.getLogger().println(Messages.CloudStorageClient_UploadingFiles());
 
     StorageObject storageObject = new StorageObject();
     storageObject.setBucket(bucket);
@@ -93,7 +93,7 @@ public class CloudStorageClient {
     Storage.Objects.Insert insert = storage.objects().insert(bucket, storageObject, content);
     insert.execute();
 
-    listener.getLogger().print("File uploaded to ");
+    listener.getLogger().printf("%s: ", Messages.CloudStorageClient_FileUploadedTo());
     hyperlinkObject(bucket, object);
     listener.getLogger().println();
   }
@@ -112,24 +112,24 @@ public class CloudStorageClient {
   public synchronized String createTempBucket() throws IOException {
     PrintStream logger = listener.getLogger();
     if (tempBucketName != null) {
-      logger.print("Using existing temp bucket: ");
+      logger.printf("%s: ", Messages.CloudStorageClient_UsingExistingTempBucket());
       hyperlinkBucket(tempBucketName);
       logger.println();
       return tempBucketName;
     }
 
-    logger.println("Looking for existing temp bucket.");
+    logger.println(Messages.CloudStorageClient_LookingForTempBucket());
     List<Bucket> buckets =
         storage.buckets().list(projectId).setPrefix(TEMP_BUCKET_PREFIX).execute().getItems();
     if (buckets != null && !buckets.isEmpty()) {
       tempBucketName = buckets.get(0).getName();
-      logger.print("Found existing temp bucket: ");
+      logger.printf("%s: ", Messages.CloudStorageClient_FoundExistingTempBucket());
       hyperlinkBucket(tempBucketName);
       logger.println();
       return tempBucketName;
     }
 
-    logger.println("Creating new temp bucket.");
+    logger.println(Messages.CloudStorageClient_CreatingNewTempBucket());
     String name = String.format("%s%s", TEMP_BUCKET_PREFIX, UUID.randomUUID().toString());
     tempBucketName =
         storage.buckets().insert(projectId,
@@ -142,7 +142,7 @@ public class CloudStorageClient {
                                 .setAction(new Action().setType("Delete"))
                                 .setCondition(new Condition().setAge(TEMP_BUCKET_TTL_DAYS))))))
             .execute().getName();
-    logger.print("New temp bucket created: ");
+    logger.printf("%s: ", Messages.CloudStorageClient_CreatedNewTempBucket());
     hyperlinkBucket(tempBucketName);
     logger.println();
     return tempBucketName;

@@ -54,7 +54,8 @@ public final class RequestProcessor {
       parseBuildRequest(request);
     } catch (Exception e) {
       return FormValidation.error(
-          e, "Cannot parse build request:\n%s", e.getMessage().replaceAll("(?m)^", "  "));
+          e, "%s:%n%s", Messages.RequestProcessor_CannotParseBuildRequest(),
+          e.getMessage().replaceAll("(?m)^", "  "));
     }
     return FormValidation.ok();
   }

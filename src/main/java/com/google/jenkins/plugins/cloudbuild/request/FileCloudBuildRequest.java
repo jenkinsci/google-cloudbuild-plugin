@@ -44,7 +44,7 @@ public class FileCloudBuildRequest extends CloudBuildRequest implements Serializ
   public String expand(BuildContext context) throws IOException, InterruptedException {
     FilePath workspace = context.getWorkspace();
     if (workspace == null) {
-      throw new AbortException("Cloud build request from file requires workspace");
+      throw new AbortException(Messages.FileCloudBuildRequest_WorkspaceRequired());
     }
     String expandedFilename = context.expand(filename);
     return workspace.child(expandedFilename).readToString();
@@ -54,7 +54,7 @@ public class FileCloudBuildRequest extends CloudBuildRequest implements Serializ
   public static class DescriptorImpl extends CloudBuildRequestDescriptor {
     @Override @Nonnull
     public String getDisplayName() {
-      return "From file";
+      return Messages.FileCloudBuildRequest_DisplayName();
     }
   }
 }

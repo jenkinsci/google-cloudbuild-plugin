@@ -65,7 +65,7 @@ public class CloudBuildBuilder extends Builder {
 
     @Override @Nonnull
     public String getDisplayName() {
-      return "Execute Google Cloud Container Builder";
+      return Messages.CloudBuildBuilder_DisplayName();
     }
   }
 }
