@@ -118,6 +118,7 @@ public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> im
     return substitutionList != null ? substitutionList.toMap(context) : Collections.emptyMap();
   }
 
+  /** Descriptor for {@link CloudBuildInput}. */
   @Extension
   public static class DescriptorImpl extends Descriptor<CloudBuildInput> {
     @Override @Nonnull

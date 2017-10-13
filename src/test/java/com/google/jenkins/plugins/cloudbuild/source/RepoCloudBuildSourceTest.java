@@ -29,14 +29,11 @@ import hudson.EnvVars;
 import hudson.model.FreeStyleProject;
 import hudson.model.TaskListener;
 import hudson.util.FormValidation.Kind;
-import java.io.IOException;
-import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.WithoutJenkins;
-import org.kohsuke.stapler.StaplerRequest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -70,7 +67,7 @@ public class RepoCloudBuildSourceTest {
    * @return the reloaded {@link RepoCloudBuildSource}
    * @throws Exception if an error occurs during the process of saving and reloading the temporary
    *     freestyle project containing {@code source}
-   * @see DescriptorImpl#newInstance(StaplerRequest, JSONObject)
+   * @see DescriptorImpl#newInstance(org.kohsuke.stapler.StaplerRequest, net.sf.json.JSONObject)
    * @see RepoCloudBuildSource#getRevision()
    * @see RepoCloudBuildSource#getRevisionType()
    * @see <a href="https://wiki.jenkins.io/display/JENKINS/Unit+Test#UnitTest-Configurationround-triptesting">

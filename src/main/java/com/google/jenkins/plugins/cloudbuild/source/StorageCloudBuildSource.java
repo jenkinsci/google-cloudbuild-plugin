@@ -65,6 +65,7 @@ public final class StorageCloudBuildSource extends CloudBuildSource implements S
             .setObject(expandedObject));
   }
 
+  /** Descriptor for {@link StorageCloudBuildSource}. */
   @Extension(ordinal = 2.0) @Symbol("storage")
   public static class DescriptorImpl extends CloudBuildSourceDescriptor {
     @Override @Nonnull

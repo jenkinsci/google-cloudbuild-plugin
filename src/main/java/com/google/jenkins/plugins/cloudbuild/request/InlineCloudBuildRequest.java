@@ -46,6 +46,7 @@ public class InlineCloudBuildRequest extends CloudBuildRequest implements Serial
     return request; // No Jenkins expansions for this build request
   }
 
+  /** Descriptor for {@link InlineCloudBuildRequest}. */
   @Extension @Symbol("inline")
   public static class DescriptorImpl extends CloudBuildRequestDescriptor {
     @Override @Nonnull

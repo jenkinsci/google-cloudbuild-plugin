@@ -40,7 +40,9 @@ public class CloudBuildBuilder extends Builder {
   }
 
   @Nonnull
-  public CloudBuildInput getInput() { return input; }
+  public CloudBuildInput getInput() {
+    return input;
+  }
 
   @Override
   public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
@@ -56,6 +58,7 @@ public class CloudBuildBuilder extends Builder {
     return true;
   }
 
+  /** Descriptor for {@link CloudBuildBuilder}. */
   @Extension
   public static class Descriptor extends BuildStepDescriptor<Builder> {
     @Override

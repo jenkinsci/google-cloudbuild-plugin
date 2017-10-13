@@ -50,6 +50,7 @@ public class FileCloudBuildRequest extends CloudBuildRequest implements Serializ
     return workspace.child(expandedFilename).readToString();
   }
 
+  /** Descriptor for {@link FileCloudBuildRequest}. */
   @Extension @Symbol("file")
   public static class DescriptorImpl extends CloudBuildRequestDescriptor {
     @Override @Nonnull

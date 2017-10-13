@@ -46,6 +46,7 @@ public class RepoCloudBuildSource extends CloudBuildSource implements Serializab
   @CheckForNull private String tag;
   @CheckForNull private String commit;
 
+  /** Indicates the type of Git revision (branch, tag, or commit) to be specified as the source. */
   public enum RevisionType {
     BRANCH(Messages.RepoCloudBuildSource_RevisionType_Branch()),
     TAG(Messages.RepoCloudBuildSource_RevisionType_Tag()),
@@ -147,6 +148,7 @@ public class RepoCloudBuildSource extends CloudBuildSource implements Serializab
             .setCommitSha(context.expand(commit)));
   }
 
+  /** Descriptor for {@link RepoCloudBuildSource}. */
   @Extension(ordinal = 1.0) @Symbol("repo")
   public static class DescriptorImpl extends CloudBuildSourceDescriptor {
     @Override @Nonnull

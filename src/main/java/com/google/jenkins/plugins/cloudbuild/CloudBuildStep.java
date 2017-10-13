@@ -53,6 +53,7 @@ public final class CloudBuildStep extends Step implements Serializable {
     return new CloudBuildStepExecution(input, context);
   }
 
+  /** Descriptor for {@link CloudBuildStep}. */
   @Extension
   public static class Descriptor extends StepDescriptor {
     @Override @Nonnull

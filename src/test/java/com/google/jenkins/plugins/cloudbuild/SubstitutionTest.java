@@ -37,8 +37,11 @@ public class SubstitutionTest {
     assertEquals(Kind.ERROR, descriptor.doCheckKey("_foo").kind);
     assertEquals(Kind.ERROR, descriptor.doCheckKey("_FOO.BAR").kind);
     assertEquals(Kind.ERROR, descriptor.doCheckKey("_").kind);
-    assertEquals(Kind.ERROR, descriptor.doCheckKey(  // max length is 100 characters
-        "_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX").kind);
+
+    // Max length is 100 characters.
+    assertEquals(Kind.ERROR, descriptor.doCheckKey(
+        "_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" +
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX").kind);
 
     // The following keys do conform to the requirements for user-defined substitutions.
     assertEquals(Kind.OK, descriptor.doCheckKey("_FOO").kind);
@@ -49,8 +52,11 @@ public class SubstitutionTest {
     assertEquals(Kind.OK, descriptor.doCheckKey("_1").kind);
     assertEquals(Kind.OK, descriptor.doCheckKey("__FOO").kind);
     assertEquals(Kind.OK, descriptor.doCheckKey("__").kind);
-    assertEquals(Kind.OK, descriptor.doCheckKey(  // max length is 100 characters
-        "_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX").kind);
+
+    // Max length is 100 characters.
+    assertEquals(Kind.OK, descriptor.doCheckKey(
+        "_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" +
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX").kind);
   }
 
 }

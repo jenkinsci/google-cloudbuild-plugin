@@ -132,6 +132,7 @@ public class LocalCloudBuildSource extends CloudBuildSource implements Serializa
             .setObject(object));
   }
 
+  /** Descriptor for {@link LocalCloudBuildSource}. */
   @Extension(ordinal = 3.0) @Symbol("local")
   public static class DescriptorImpl extends CloudBuildSourceDescriptor {
     @Override @Nonnull

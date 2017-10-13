@@ -63,6 +63,7 @@ public class SubstitutionList extends AbstractDescribableImpl<SubstitutionList> 
     return subMap;
   }
 
+  /** Descriptor for {@link SubstitutionList}. */
   @Extension
   public static class DescriptorImpl extends Descriptor<SubstitutionList> {
     @Override @Nonnull

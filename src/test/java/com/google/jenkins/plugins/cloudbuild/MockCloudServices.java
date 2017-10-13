@@ -16,7 +16,6 @@ package com.google.jenkins.plugins.cloudbuild;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.matches;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import com.cloudbees.plugins.credentials.SystemCredentialsProvider;

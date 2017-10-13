@@ -22,7 +22,8 @@ import org.junit.Test;
 /** Unit tests for YamlUtil. */
 public class YamlUtilTest {
 
-  private static final String RESOURCE_BASE = "/com/google/jenkins/plugins/cloudbuild/YamlUtilTest/";
+  private static final String RESOURCE_BASE =
+      "/com/google/jenkins/plugins/cloudbuild/YamlUtilTest/";
 
   @Test
   public void toJson() throws Exception {
