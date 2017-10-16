@@ -19,5 +19,8 @@
     <f:dropdownDescriptorSelector title="Source" field="source" />
   </f:optionalBlock>
   <f:dropdownDescriptorSelector title="Request" field="request" />
+  <f:entry title="Timeout" field="timeout">
+    <f:textbox/>
+  </f:entry>
   <f:property field="substitutionList"/>
 </j:jelly>

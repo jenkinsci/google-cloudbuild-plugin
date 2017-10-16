@@ -51,7 +51,7 @@ public class CloudBuildBuilder extends Builder {
     Source buildSource = input.getSourceOrDefault().prepare(context, clients);
     CloudBuildClient cloudBuild = clients.cloudBuild();
     String buildId = cloudBuild.sendBuildRequest(
-        finalRequest, buildSource, input.getSubstitutionMap(context));
+        finalRequest, buildSource, input.getSubstitutionMap(context), input.getTimeoutDuration());
     cloudBuild.waitForSuccess(buildId);
     return true;
   }

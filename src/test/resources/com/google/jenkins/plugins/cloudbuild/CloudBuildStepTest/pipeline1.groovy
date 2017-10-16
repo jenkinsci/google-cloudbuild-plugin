@@ -23,5 +23,6 @@ node {
             - name: ubuntu
               args: [echo, '$_MESSAGE']
         '''),
-        substitutions: [_MESSAGE: message]
+        substitutions: [_MESSAGE: message],
+        timeout: '3h14m15.9s'
 }

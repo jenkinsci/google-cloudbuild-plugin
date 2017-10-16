@@ -24,6 +24,7 @@ import com.google.api.services.cloudbuild.v1.model.Source;
 import com.google.api.services.cloudbuild.v1.model.StorageSource;
 import com.google.common.base.Strings;
 import com.google.jenkins.plugins.cloudbuild.BuildLogAction;
+import com.google.jenkins.plugins.cloudbuild.DurationUtil;
 import com.google.jenkins.plugins.cloudbuild.RepoAction;
 import com.google.jenkins.plugins.cloudbuild.RequestProcessor;
 import com.google.jenkins.plugins.cloudbuild.StorageAction;
@@ -32,6 +33,7 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -59,12 +61,16 @@ public class CloudBuildClient {
    * @param request the YAML or JSON request to send
    * @param source the {@link Source} to use for the build request
    * @param substitutions the custom substitutions to apply
+   * @param timeout the maximum time a build can last before it should fail as TIMEOUT, written as a
+   *     duration (e.g., "2h15m5s"). If no units are specified, seconds is assumed. If {@code null},
+   *     no timeout is added to the build request.
    * @return the ID of the newly-submitted build
    * @throws IOException if an I/O error occurs in processing the request
    * @see <a href="https://cloud.google.com/container-builder/docs/concepts/build-requests">
    *        Cloud Container Builder - Build Requests</a>
    */
-  public String sendBuildRequest(String request, Source source, Map<String, String> substitutions)
+  public String sendBuildRequest(
+      String request, Source source, Map<String, String> substitutions, Duration timeout)
       throws IOException {
     logger.println("Google Cloud Container Builder is being executed!");
     logger.println(request);
@@ -76,6 +82,9 @@ public class CloudBuildClient {
     Build buildRequest = RequestProcessor.parseBuildRequest(request)
         .setSource(source)
         .setSubstitutions(substitutions);
+    if (timeout != null) {
+      buildRequest.setTimeout(DurationUtil.toDecimalSecondsString(timeout));
+    }
     addSourceActions(source);
 
     Operation operation = cloudBuild.projects().builds().create(projectId, buildRequest).execute();

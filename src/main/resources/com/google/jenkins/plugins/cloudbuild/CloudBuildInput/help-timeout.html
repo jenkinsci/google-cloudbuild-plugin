@@ -1,0 +1,15 @@
+<div>
+  The maximum time the build can last before it should fail as TIMEOUT. If specified, this overrides
+  the timeout specified in the build request (if any). This field is case-insensitive, and must be
+  expressed in one of the following forms:
+  <ul>
+    <li>An <a href="https://en.wikipedia.org/wiki/ISO_8601#Durations">ISO-8601 Duration</a> not
+      containing elements larger than days (e.g., P1DT3H14M15.9S). Days are interpreted as exactly
+      24 hours.</li>
+    <li>A string of the form <em>n</em>H<em>n</em>M<em>n.nnn</em>S indicating hours, minutes, and
+      seconds (e.g., 3h14m15.9s). Zero-valued segments may be omitted (e.g., 14m or 3h15.9s). Note
+      that this is equivalent to an ISO-8601 duration with the prefix "PT" omitted.</li>
+    <li>A number (with an optional decimal part). This is interpreted as the specified number of
+      seconds. Note that this is equivalent to the ISO-8601 duration "PT<em>n.nnn</em>S".</li>
+  </ul>
+</div>
