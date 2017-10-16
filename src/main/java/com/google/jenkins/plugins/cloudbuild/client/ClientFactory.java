@@ -45,7 +45,7 @@ public class ClientFactory {
   public ClientFactory(Run<?, ?> run, TaskListener listener, String credentialsId)
       throws IOException {
     if (credentialsId == null) {
-      throw new IllegalArgumentException("credentialsId must be specified");
+      throw new IllegalArgumentException(Messages.ClientFactory_CredentialsIdRequired());
     }
     this.run = run;
     this.listener = listener;
@@ -53,7 +53,8 @@ public class ClientFactory {
     try {
       this.transport = getDefaultTransport();
     } catch (GeneralSecurityException e) {
-      throw new AbortException("Failed to initialize HTTP transport: " + e.getMessage());
+      throw new AbortException(
+          Messages.ClientFactory_FailedToInitializeHTTPTransport(e.getMessage()));
     }
     this.jsonFactory = new JacksonFactory();
 
@@ -61,7 +62,7 @@ public class ClientFactory {
     this.credentials = CredentialsProvider.findCredentialById(
         credentialsId, GoogleRobotPrivateKeyCredentials.class, run, requirement);
     if (credentials == null) {
-      throw new AbortException("Could not retrieve credentials: " + credentialsId);
+      throw new AbortException(Messages.ClientFactory_FailedToRetrieveCredentials(credentialsId));
     }
     this.gcred = credentials.getGoogleCredential(requirement);
   }

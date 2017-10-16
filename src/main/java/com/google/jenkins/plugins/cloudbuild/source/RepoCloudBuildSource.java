@@ -46,7 +46,21 @@ public class RepoCloudBuildSource extends CloudBuildSource implements Serializab
   @CheckForNull private String tag;
   @CheckForNull private String commit;
 
-  public enum RevisionType { BRANCH, TAG, COMMIT }
+  public enum RevisionType {
+    BRANCH(Messages.RepoCloudBuildSource_RevisionType_Branch()),
+    TAG(Messages.RepoCloudBuildSource_RevisionType_Tag()),
+    COMMIT(Messages.RepoCloudBuildSource_RevisionType_Commit());
+
+    public String getDisplayName() {
+      return displayName;
+    }
+
+    private final String displayName;
+
+    RevisionType(String displayName) {
+      this.displayName = displayName;
+    }
+  }
 
   @DataBoundConstructor
   public RepoCloudBuildSource() {}
@@ -137,13 +151,13 @@ public class RepoCloudBuildSource extends CloudBuildSource implements Serializab
   public static class DescriptorImpl extends CloudBuildSourceDescriptor {
     @Override @Nonnull
     public String getDisplayName() {
-      return "Google Cloud Source Repository";
+      return Messages.RepoCloudBuildSource_DisplayName();
     }
 
     public ListBoxModel doFillRevisionTypeItems() {
       ListBoxModel items = new ListBoxModel();
       for (RevisionType type : RevisionType.values()) {
-        items.add(type.name().toLowerCase(), type.name());
+        items.add(type.getDisplayName(), type.name());
       }
       return items;
     }
@@ -153,7 +167,7 @@ public class RepoCloudBuildSource extends CloudBuildSource implements Serializab
         @QueryParameter String value,
         @QueryParameter String revisionType) {
       if (value.isEmpty()) {
-        return FormValidation.error("Revision not specified");
+        return FormValidation.error(Messages.RepoCloudBuildSource_RevisionRequired());
       }
       // Don't bother checking the format of the commit SHA if there are variables present.
       if (!Objects.equals(Util.replaceMacro(value, x -> ""), value)) {
@@ -161,7 +175,8 @@ public class RepoCloudBuildSource extends CloudBuildSource implements Serializab
       }
       RevisionType type = RevisionType.valueOf(revisionType);
       if (type == RevisionType.COMMIT && !SHA_REGEX.matcher(value).matches()) {
-        return FormValidation.error("Commit SHA must match %s%n", SHA_REGEX.pattern());
+        return FormValidation.error(
+            Messages.RepoCloudBuildSource_CommitSHAMustMatchPattern(SHA_REGEX.pattern()));
       }
       return FormValidation.ok();
     }

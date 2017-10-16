@@ -122,7 +122,7 @@ public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> im
   public static class DescriptorImpl extends Descriptor<CloudBuildInput> {
     @Override @Nonnull
     public String getDisplayName() {
-      return "Google Cloud Build inputs.";
+      return Messages.CloudBuildInput_DisplayName();
     }
 
     @Override

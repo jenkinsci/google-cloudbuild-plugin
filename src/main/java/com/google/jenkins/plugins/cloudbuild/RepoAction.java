@@ -34,7 +34,7 @@ public class RepoAction implements Action {
 
   @Override
   public String getDisplayName() {
-    return "Google Cloud Source Repository";
+    return Messages.RepoAction_DisplayName();
   }
 
   @Override

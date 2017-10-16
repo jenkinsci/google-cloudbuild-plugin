@@ -13,5 +13,5 @@
 -->
 <?jelly escape-by-default='true'?>
 <div>
-  This plugin adds the ability to call Google Cloud Container Builder as a build step.
+  ${%PluginDescription}
 </div>

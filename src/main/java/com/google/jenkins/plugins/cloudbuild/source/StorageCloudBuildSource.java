@@ -57,8 +57,8 @@ public final class StorageCloudBuildSource extends CloudBuildSource implements S
       throws IOException, InterruptedException {
     String expandedBucket = context.expand(bucket);
     String expandedObject = context.expand(object);
-    context.getListener().getLogger().printf("Preparing storage source: bucket=%s, object=%s%n",
-        expandedBucket, expandedObject);
+    context.getListener().getLogger().println(
+        Messages.StorageCloudBuildSource_Preparing(expandedBucket, expandedObject));
     return new Source().setStorageSource(
         new StorageSource()
             .setBucket(expandedBucket)
@@ -69,19 +69,19 @@ public final class StorageCloudBuildSource extends CloudBuildSource implements S
   public static class DescriptorImpl extends CloudBuildSourceDescriptor {
     @Override @Nonnull
     public String getDisplayName() {
-      return "Google Cloud Storage";
+      return Messages.StorageCloudBuildSource_DisplayName();
     }
 
     public FormValidation doCheckBucket(@QueryParameter String value) {
       if (value.isEmpty()) {
-        return FormValidation.error("Bucket not specified");
+        return FormValidation.error(Messages.StorageCloudBuildSource_BucketRequired());
       }
       return FormValidation.ok();
     }
 
     public FormValidation doCheckObject(@QueryParameter String value) {
       if (value.isEmpty()) {
-        return FormValidation.error("Object not specified");
+        return FormValidation.error(Messages.StorageCloudBuildSource_ObjectRequired());
       }
       return FormValidation.ok();
     }

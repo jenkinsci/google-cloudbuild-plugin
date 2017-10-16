@@ -32,7 +32,7 @@ public class StorageAction implements Action {
 
   @Override
   public String getDisplayName() {
-    return "Google Cloud Storage";
+    return Messages.StorageAction_DisplayName();
   }
 
   @Override

@@ -30,7 +30,7 @@ public class BuildLogAction implements Action {
 
   @Override
   public String getDisplayName() {
-    return "Google Cloud Build Log";
+    return Messages.BuildLogAction_DisplayName();
   }
 
   @Override
