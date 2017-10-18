@@ -15,10 +15,11 @@ package com.google.jenkins.plugins.cloudbuild;
 
 import static org.junit.Assert.assertEquals;
 
-import com.google.jenkins.plugins.cloudbuild.Substitution.DescriptorImpl;
-import hudson.util.FormValidation.Kind;
 import org.junit.Test;
 import org.jvnet.hudson.test.WithoutJenkins;
+
+import com.google.jenkins.plugins.cloudbuild.Substitution.DescriptorImpl;
+import hudson.util.FormValidation.Kind;
 
 /** Tests for {@link Substitution}. */
 public class SubstitutionTest {

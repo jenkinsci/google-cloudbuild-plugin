@@ -13,10 +13,17 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
+import java.io.IOException;
+
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.when;
+
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
 
 import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
 import com.google.api.client.http.HttpMethods;
@@ -40,12 +47,7 @@ import com.google.jenkins.plugins.credentials.oauth.GoogleRobotCredentialsModule
 import com.google.jenkins.plugins.credentials.oauth.GoogleRobotPrivateKeyCredentials;
 import com.google.jenkins.plugins.credentials.oauth.JsonServiceAccountConfig;
 import hudson.FilePath;
-import java.io.IOException;
 import jenkins.model.Jenkins;
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.Answer;
 
 /**
  * Provides mock handlers for Cloud Service API endpoints.

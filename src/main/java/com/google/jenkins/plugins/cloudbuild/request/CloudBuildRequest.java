@@ -13,11 +13,12 @@
  */
 package com.google.jenkins.plugins.cloudbuild.request;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
 import hudson.ExtensionPoint;
 import hudson.model.AbstractDescribableImpl;
-import java.io.IOException;
-import java.io.Serializable;
 
 /** Generates the request to submit to Google Cloud Container Builder. */
 public abstract class CloudBuildRequest extends AbstractDescribableImpl<CloudBuildRequest>

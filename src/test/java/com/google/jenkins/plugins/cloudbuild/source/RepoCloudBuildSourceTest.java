@@ -17,6 +17,14 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.WithoutJenkins;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import com.google.api.services.cloudbuild.v1.model.Source;
 import com.google.jenkins.plugins.cloudbuild.CloudBuildBuilder;
 import com.google.jenkins.plugins.cloudbuild.CloudBuildInput;
@@ -29,13 +37,6 @@ import hudson.EnvVars;
 import hudson.model.FreeStyleProject;
 import hudson.model.TaskListener;
 import hudson.util.FormValidation.Kind;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.WithoutJenkins;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 /** Tests for {@link RepoCloudBuildSource}. */
 public class RepoCloudBuildSourceTest {

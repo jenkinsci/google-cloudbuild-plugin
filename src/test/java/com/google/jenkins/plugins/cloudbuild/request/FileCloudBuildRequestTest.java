@@ -13,7 +13,15 @@
  */
 package com.google.jenkins.plugins.cloudbuild.request;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.jvnet.hudson.test.CreateFileBuilder;
+import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.TestBuilder;
 
 import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
 import com.google.jenkins.plugins.cloudbuild.context.FreeStyleBuildContext;
@@ -23,12 +31,6 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleProject;
 import hudson.slaves.EnvironmentVariablesNodeProperty;
-import java.io.IOException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.jvnet.hudson.test.CreateFileBuilder;
-import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.TestBuilder;
 
 /** Tests for {@link FileCloudBuildRequest}. */
 public class FileCloudBuildRequestTest {

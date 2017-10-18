@@ -13,17 +13,20 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
-import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
-import hudson.Extension;
-import hudson.model.AbstractDescribableImpl;
-import hudson.model.Descriptor;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Nonnull;
+
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
+import hudson.Extension;
+import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
 
 /** A list of substitutions to be applied to a build request. */
 public class SubstitutionList extends AbstractDescribableImpl<SubstitutionList> implements

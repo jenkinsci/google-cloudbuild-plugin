@@ -13,6 +13,16 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import javax.annotation.Nonnull;
+
+import org.jenkinsci.plugins.workflow.steps.StepContext;
+import org.jenkinsci.plugins.workflow.steps.StepExecution;
+
 import com.google.jenkins.plugins.cloudbuild.client.ClientFactory;
 import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
 import com.google.jenkins.plugins.cloudbuild.context.PipelineBuildContext;
@@ -20,13 +30,6 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.util.DaemonThreadFactory;
 import hudson.util.NamingThreadFactory;
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import javax.annotation.Nonnull;
-import org.jenkinsci.plugins.workflow.steps.StepContext;
-import org.jenkinsci.plugins.workflow.steps.StepExecution;
 
 /** Submits a build request to Google Cloud Container Builder. */
 public final class CloudBuildStepExecution extends StepExecution {

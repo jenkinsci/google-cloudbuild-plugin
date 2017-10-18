@@ -13,16 +13,19 @@
  */
 package com.google.jenkins.plugins.cloudbuild.request;
 
+import java.io.IOException;
+import java.io.Serializable;
+
+import javax.annotation.Nonnull;
+
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
+
 import com.google.jenkins.plugins.cloudbuild.RequestProcessor;
 import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
 import hudson.Extension;
 import hudson.util.FormValidation;
-import java.io.IOException;
-import java.io.Serializable;
-import javax.annotation.Nonnull;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 /** A build request that is specified inline. */
 public class InlineCloudBuildRequest extends CloudBuildRequest implements Serializable {

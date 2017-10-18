@@ -13,11 +13,12 @@
  */
 package com.google.jenkins.plugins.cloudbuild.context;
 
+import java.io.IOException;
+
 import hudson.FilePath;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.TaskListener;
-import java.io.IOException;
 
 /** The context of the currently running Jenkins build. */
 public class FreeStyleBuildContext implements BuildContext {

@@ -13,6 +13,12 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+
+import org.kohsuke.stapler.DataBoundConstructor;
+
 import com.google.api.services.cloudbuild.v1.model.Source;
 import com.google.jenkins.plugins.cloudbuild.client.ClientFactory;
 import com.google.jenkins.plugins.cloudbuild.client.CloudBuildClient;
@@ -25,9 +31,6 @@ import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
-import java.io.IOException;
-import javax.annotation.Nonnull;
-import org.kohsuke.stapler.DataBoundConstructor;
 
 /** A Jenkins builder that submits a build request to Google Cloud Container Builder. */
 public class CloudBuildBuilder extends Builder {

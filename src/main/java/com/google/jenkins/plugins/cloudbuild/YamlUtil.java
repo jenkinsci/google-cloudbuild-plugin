@@ -13,10 +13,12 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import java.io.IOException;
-import javax.annotation.Nonnull;
 
 /** Helper methods for processing YAML. */
 public final class YamlUtil {

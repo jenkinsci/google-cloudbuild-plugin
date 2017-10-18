@@ -13,18 +13,21 @@
  */
 package com.google.jenkins.plugins.cloudbuild.source;
 
+import java.io.IOException;
+import java.io.Serializable;
+
+import javax.annotation.Nonnull;
+
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
+
 import com.google.api.services.cloudbuild.v1.model.Source;
 import com.google.api.services.cloudbuild.v1.model.StorageSource;
 import com.google.jenkins.plugins.cloudbuild.client.ClientFactory;
 import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
 import hudson.Extension;
 import hudson.util.FormValidation;
-import java.io.IOException;
-import java.io.Serializable;
-import javax.annotation.Nonnull;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 /** Indicates that an existing Google Cloud Storage object should be used as the source. */
 public final class StorageCloudBuildSource extends CloudBuildSource implements Serializable {

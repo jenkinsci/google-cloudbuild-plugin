@@ -13,15 +13,18 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
+import java.io.Serializable;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
+
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
-import java.io.Serializable;
-import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 /**
  * A user-defined substitution to be added to the build request.

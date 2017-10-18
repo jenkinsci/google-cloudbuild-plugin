@@ -13,11 +13,13 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.io.Resources;
 import java.nio.charset.Charset;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.Resources;
 
 /** Unit tests for YamlUtil. */
 public class YamlUtilTest {

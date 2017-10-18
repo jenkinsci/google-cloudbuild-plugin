@@ -13,20 +13,22 @@
  */
 package com.google.jenkins.plugins.cloudbuild.request;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
-import hudson.EnvVars;
-import hudson.model.TaskListener;
-import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
+import hudson.EnvVars;
+import hudson.model.TaskListener;
 
 /** Tests for {@link InlineCloudBuildRequest}. */
 public class InlineCloudBuildRequestTest {

@@ -13,6 +13,13 @@
  */
 package com.google.jenkins.plugins.cloudbuild.client;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.storage.Storage;
 import com.google.api.services.storage.model.Bucket;
@@ -22,12 +29,6 @@ import com.google.api.services.storage.model.Bucket.Lifecycle.Rule.Action;
 import com.google.api.services.storage.model.Bucket.Lifecycle.Rule.Condition;
 import com.google.api.services.storage.model.StorageObject;
 import hudson.model.TaskListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Client for communicating with Google Cloud Storage API.

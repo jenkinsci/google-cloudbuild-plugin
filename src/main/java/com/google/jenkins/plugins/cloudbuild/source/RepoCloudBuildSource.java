@@ -13,6 +13,21 @@
  */
 package com.google.jenkins.plugins.cloudbuild.source;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.regex.Pattern;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+
 import com.google.api.services.cloudbuild.v1.model.RepoSource;
 import com.google.api.services.cloudbuild.v1.model.Source;
 import com.google.common.base.Strings;
@@ -22,19 +37,7 @@ import hudson.Extension;
 import hudson.Util;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Objects;
-import java.util.regex.Pattern;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import net.sf.json.JSONObject;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
 
 /** Indicates that an existing Google Cloud Repo should be used as the source. */
 public class RepoCloudBuildSource extends CloudBuildSource implements Serializable {

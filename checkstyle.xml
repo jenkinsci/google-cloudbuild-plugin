@@ -67,6 +67,7 @@ by Joshua Bloch in his book Effective Java -->
 
     <module name="ImportOrder">
       <!-- Checks for out of order import statements. -->
+      <property name="groups" value="/^javax?\./,org"/>
       <property name="ordered" value="true"/>
       <property name="separated" value="true"/>
       <property name="option" value="above"/>
