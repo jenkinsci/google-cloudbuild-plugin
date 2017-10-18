@@ -13,16 +13,19 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.io.Resources;
 import java.nio.charset.Charset;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.Resources;
 
 /** Unit tests for YamlUtil. */
 public class YamlUtilTest {
 
-  private static final String RESOURCE_BASE = "/com/google/jenkins/plugins/cloudbuild/YamlUtilTest/";
+  private static final String RESOURCE_BASE =
+      "/com/google/jenkins/plugins/cloudbuild/YamlUtilTest/";
 
   @Test
   public void toJson() throws Exception {

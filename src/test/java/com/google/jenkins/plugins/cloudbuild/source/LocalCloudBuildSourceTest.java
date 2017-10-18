@@ -13,10 +13,23 @@
  */
 package com.google.jenkins.plugins.cloudbuild.source;
 
-import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
+import java.io.IOException;
+import java.io.InputStream;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.jvnet.hudson.test.CreateFileBuilder;
+import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.TestBuilder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 
 import com.google.api.client.util.IOUtils;
 import com.google.api.services.cloudbuild.v1.model.Source;
@@ -32,16 +45,6 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleProject;
 import hudson.slaves.EnvironmentVariablesNodeProperty;
-import java.io.IOException;
-import java.io.InputStream;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.jvnet.hudson.test.CreateFileBuilder;
-import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.TestBuilder;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 /** Tests for {@link LocalCloudBuildSource}. */
 public class LocalCloudBuildSourceTest {

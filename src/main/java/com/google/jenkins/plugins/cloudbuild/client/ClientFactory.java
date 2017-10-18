@@ -13,6 +13,9 @@
  */
 package com.google.jenkins.plugins.cloudbuild.client;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -26,8 +29,6 @@ import com.google.jenkins.plugins.credentials.oauth.GoogleRobotPrivateKeyCredent
 import hudson.AbortException;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 /** Creates clients for communicating with Google APIs. */
 public class ClientFactory {

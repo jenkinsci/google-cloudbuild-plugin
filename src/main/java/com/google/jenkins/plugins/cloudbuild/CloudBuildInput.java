@@ -13,13 +13,6 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
-import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
-import com.google.jenkins.plugins.cloudbuild.request.CloudBuildRequest;
-import com.google.jenkins.plugins.cloudbuild.source.CloudBuildSource;
-import com.google.jenkins.plugins.credentials.domains.RequiresDomain;
-import hudson.Extension;
-import hudson.model.AbstractDescribableImpl;
-import hudson.model.Descriptor;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,12 +20,22 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import net.sf.json.JSONObject;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.StaplerRequest;
+
+import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
+import com.google.jenkins.plugins.cloudbuild.request.CloudBuildRequest;
+import com.google.jenkins.plugins.cloudbuild.source.CloudBuildSource;
+import com.google.jenkins.plugins.credentials.domains.RequiresDomain;
+import hudson.Extension;
+import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
+import net.sf.json.JSONObject;
 
 /** All inputs required to submit a Google Cloud Container Builder build request. */
 @RequiresDomain(value = CloudBuildScopeRequirement.class)
@@ -118,6 +121,7 @@ public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> im
     return substitutionList != null ? substitutionList.toMap(context) : Collections.emptyMap();
   }
 
+  /** Descriptor for {@link CloudBuildInput}. */
   @Extension
   public static class DescriptorImpl extends Descriptor<CloudBuildInput> {
     @Override @Nonnull

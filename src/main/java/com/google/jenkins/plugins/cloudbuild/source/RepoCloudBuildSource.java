@@ -13,6 +13,21 @@
  */
 package com.google.jenkins.plugins.cloudbuild.source;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.regex.Pattern;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+
 import com.google.api.services.cloudbuild.v1.model.RepoSource;
 import com.google.api.services.cloudbuild.v1.model.Source;
 import com.google.common.base.Strings;
@@ -22,19 +37,7 @@ import hudson.Extension;
 import hudson.Util;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Objects;
-import java.util.regex.Pattern;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import net.sf.json.JSONObject;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
 
 /** Indicates that an existing Google Cloud Repo should be used as the source. */
 public class RepoCloudBuildSource extends CloudBuildSource implements Serializable {
@@ -46,6 +49,7 @@ public class RepoCloudBuildSource extends CloudBuildSource implements Serializab
   @CheckForNull private String tag;
   @CheckForNull private String commit;
 
+  /** Indicates the type of Git revision (branch, tag, or commit) to be specified as the source. */
   public enum RevisionType {
     BRANCH(Messages.RepoCloudBuildSource_RevisionType_Branch()),
     TAG(Messages.RepoCloudBuildSource_RevisionType_Tag()),
@@ -147,6 +151,7 @@ public class RepoCloudBuildSource extends CloudBuildSource implements Serializab
             .setCommitSha(context.expand(commit)));
   }
 
+  /** Descriptor for {@link RepoCloudBuildSource}. */
   @Extension(ordinal = 1.0) @Symbol("repo")
   public static class DescriptorImpl extends CloudBuildSourceDescriptor {
     @Override @Nonnull

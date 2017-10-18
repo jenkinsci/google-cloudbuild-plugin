@@ -13,10 +13,11 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
+import java.io.IOException;
+
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.cloudbuild.v1.model.Build;
 import hudson.util.FormValidation;
-import java.io.IOException;
 
 
 /** Helper methods for handling the Build Request */

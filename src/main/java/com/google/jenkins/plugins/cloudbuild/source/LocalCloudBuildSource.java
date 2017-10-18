@@ -13,6 +13,19 @@
  */
 package com.google.jenkins.plugins.cloudbuild.source;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.annotation.Nonnull;
+
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
+
 import com.google.api.services.cloudbuild.v1.model.Source;
 import com.google.api.services.cloudbuild.v1.model.StorageSource;
 import com.google.jenkins.plugins.cloudbuild.CloudBuildBuilder;
@@ -30,16 +43,6 @@ import hudson.util.DirScanner;
 import hudson.util.FormValidation;
 import hudson.util.NamingThreadFactory;
 import hudson.util.io.ArchiverFactory;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import javax.annotation.Nonnull;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Uploads a file, or a gzipped-tarball of a directory, within the workspace to a temporary Google
@@ -132,6 +135,7 @@ public class LocalCloudBuildSource extends CloudBuildSource implements Serializa
             .setObject(object));
   }
 
+  /** Descriptor for {@link LocalCloudBuildSource}. */
   @Extension(ordinal = 3.0) @Symbol("local")
   public static class DescriptorImpl extends CloudBuildSourceDescriptor {
     @Override @Nonnull

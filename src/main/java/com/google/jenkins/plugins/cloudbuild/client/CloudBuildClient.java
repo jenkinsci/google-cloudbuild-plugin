@@ -13,6 +13,11 @@
  */
 package com.google.jenkins.plugins.cloudbuild.client;
 
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.cloudbuild.v1.CloudBuild;
@@ -30,10 +35,6 @@ import com.google.jenkins.plugins.cloudbuild.StorageAction;
 import hudson.AbortException;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Client for communicating with Google Cloud Container Builder API.

@@ -13,13 +13,14 @@
  */
 package com.google.jenkins.plugins.cloudbuild.source;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import com.google.api.services.cloudbuild.v1.model.Source;
 import com.google.jenkins.plugins.cloudbuild.client.ClientFactory;
 import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
 import hudson.ExtensionPoint;
 import hudson.model.AbstractDescribableImpl;
-import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * The source to be used along with a Google Cloud Container Builder build request.

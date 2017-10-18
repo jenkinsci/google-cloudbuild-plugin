@@ -13,6 +13,12 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.everyItem;
@@ -22,21 +28,17 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.google.common.collect.Lists;
-import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
-import hudson.EnvVars;
-import hudson.model.TaskListener;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.WithoutJenkins;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import com.google.common.collect.Lists;
+import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
+import hudson.EnvVars;
+import hudson.model.TaskListener;
 
 /** Tests for {@link SubstitutionList}. */
 public class SubstitutionListTest {

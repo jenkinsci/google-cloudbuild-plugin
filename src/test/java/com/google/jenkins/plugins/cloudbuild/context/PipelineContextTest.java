@@ -13,13 +13,11 @@
  */
 package com.google.jenkins.plugins.cloudbuild.context;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import hudson.EnvVars;
-import hudson.FilePath;
-import hudson.model.TaskListener;
-import java.io.IOException;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,6 +25,10 @@ import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.model.TaskListener;
 
 /** Tests for {@link BuildContext}. */
 public class PipelineContextTest {

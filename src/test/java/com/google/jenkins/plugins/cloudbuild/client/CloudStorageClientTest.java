@@ -13,6 +13,13 @@
  */
 package com.google.jenkins.plugins.cloudbuild.client;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.startsWith;
@@ -23,6 +30,12 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpStatusCodes;
@@ -39,17 +52,6 @@ import com.google.api.services.storage.model.Buckets;
 import com.google.api.services.storage.model.StorageObject;
 import com.google.common.net.HttpHeaders;
 import hudson.model.TaskListener;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 /** Tests for {@link CloudStorageClient}. */
 public class CloudStorageClientTest {

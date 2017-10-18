@@ -13,15 +13,18 @@
  */
 package com.google.jenkins.plugins.cloudbuild.request;
 
+import java.io.IOException;
+import java.io.Serializable;
+
+import javax.annotation.Nonnull;
+
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
+
 import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
 import hudson.AbortException;
 import hudson.Extension;
 import hudson.FilePath;
-import java.io.IOException;
-import java.io.Serializable;
-import javax.annotation.Nonnull;
-import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.DataBoundConstructor;
 
 /** Reads the build request from a file within the workspace. */
 public class FileCloudBuildRequest extends CloudBuildRequest implements Serializable {
@@ -50,6 +53,7 @@ public class FileCloudBuildRequest extends CloudBuildRequest implements Serializ
     return workspace.child(expandedFilename).readToString();
   }
 
+  /** Descriptor for {@link FileCloudBuildRequest}. */
   @Extension @Symbol("file")
   public static class DescriptorImpl extends CloudBuildRequestDescriptor {
     @Override @Nonnull

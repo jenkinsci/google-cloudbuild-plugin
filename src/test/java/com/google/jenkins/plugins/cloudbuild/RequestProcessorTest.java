@@ -13,9 +13,10 @@
  */
 package com.google.jenkins.plugins.cloudbuild;
 
-import hudson.util.FormValidation.Kind;
 import org.junit.Assert;
 import org.junit.Test;
+
+import hudson.util.FormValidation.Kind;
 
 /** Unit tests for RequestProcessor */
 public class RequestProcessorTest {

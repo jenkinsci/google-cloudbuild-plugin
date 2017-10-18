@@ -13,10 +13,12 @@
  */
 package com.google.jenkins.plugins.cloudbuild.context;
 
+import java.io.IOException;
+
+import org.jenkinsci.plugins.workflow.steps.StepContext;
+
 import hudson.FilePath;
 import hudson.model.TaskListener;
-import java.io.IOException;
-import org.jenkinsci.plugins.workflow.steps.StepContext;
 
 /** The context of the currently running Jenkins build. */
 public class PipelineBuildContext implements BuildContext {
