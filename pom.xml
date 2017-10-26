@@ -106,6 +106,7 @@
         <configuration>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
           <configLocation>checkstyle.xml</configLocation>
+          <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
           <failsOnError>true</failsOnError>
           <violationSeverity>warning</violationSeverity>
           <consoleOutput>true</consoleOutput>
