@@ -32,9 +32,11 @@ import com.google.jenkins.plugins.cloudbuild.request.FileCloudBuildRequest;
 import com.google.jenkins.plugins.cloudbuild.request.InlineCloudBuildRequest;
 import com.google.jenkins.plugins.cloudbuild.source.RepoCloudBuildSource;
 import com.google.jenkins.plugins.cloudbuild.source.StorageCloudBuildSource;
+import hudson.Functions;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
+import hudson.tasks.BatchFile;
 import hudson.tasks.Shell;
 
 /** Integration tests for {@link CloudBuildBuilder}. */
@@ -54,12 +56,21 @@ public class CloudBuildBuilderTest {
 
   @Test
   public void freeStyleProject1() throws Exception {
-    project.getBuildersList().add(new Shell(
-        "cat <<EOF >cloudbuild.yaml\n" +
-        "steps:\n" +
-        "- name: ubuntu\n" +
-        "  args: [echo, '\\$_MESSAGE', '\\$_JOB_NAME']\n" +
-        "EOF"));
+    if (Functions.isWindows()) {
+      project.getBuildersList().add(new BatchFile(
+          "(\n" +
+          "echo.steps:\n" +
+          "echo.- name: ubuntu\n" +
+          "echo.  args: [echo, '$_MESSAGE', '$_JOB_NAME']\n" +
+          ")>cloudbuild.yaml"));
+    } else {
+      project.getBuildersList().add(new Shell(
+          "cat <<EOF >cloudbuild.yaml\n" +
+          "steps:\n" +
+          "- name: ubuntu\n" +
+          "  args: [echo, '\\$_MESSAGE', '\\$_JOB_NAME']\n" +
+          "EOF"));
+    }
 
     CloudBuildInput input =
         new CloudBuildInput("test-project", new FileCloudBuildRequest("cloudbuild.yaml"));
