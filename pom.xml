@@ -14,6 +14,7 @@
   <packaging>hpi</packaging>
   <name>Google Cloud Container Builder Plugin</name>
   <version>0.1-SNAPSHOT</version>
+  <url>https://wiki.jenkins.io/display/JENKINS/Google+Cloud+Build+Plugin</url>
   <description>
     This plugin provides the "Google Cloud Container Builder" build step for creating and running
     Docker container images in the Google Cloud environment from application source code.
