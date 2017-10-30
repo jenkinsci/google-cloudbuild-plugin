@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -13,7 +11,7 @@
   <artifactId>google-cloudbuild</artifactId>
   <packaging>hpi</packaging>
   <name>Google Cloud Container Builder Plugin</name>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <url>https://wiki.jenkins.io/display/JENKINS/Google+Cloud+Build+Plugin</url>
   <description>
     This plugin provides the "Google Cloud Container Builder" build step for creating and running
@@ -49,7 +47,7 @@
     <connection>scm:git:git://github.com/jenkinsci/google-cloudbuild-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/google-cloudbuild-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/google-cloudbuild-plugin</url>
-    <tag>HEAD</tag>
+    <tag>google-cloudbuild-0.1</tag>
   </scm>
 
   <repositories>
