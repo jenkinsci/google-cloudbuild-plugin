@@ -203,7 +203,7 @@ The `googleCloudBuild` function accepts the following parameters:
     *   `local(PATH)` - archives the contents of `PATH`, uploads the resulting tgz to Cloud Storage and uses that as the source in the build request
     *   `storage(bucket: BUCKET, object: OBJECT)` - uses an existing Cloud Storage object as the source in the build request
     *   `repo(projectId: PROJECT_ID, repoName: REPO_NAME, branch: BRANCH, tag: TAG, commit: COMMIT)` - uses a Cloud Source Repository as the source in the build request. Exactly one of branch, tag, or commit must be specified. The projectId and repoName parameters may be omitted, in which case the same semantics are used as [described in the API documentation](https://cloud.google.com/container-builder/docs/api/reference/rest/v1/RepoSource).
-*   `substitutions` (optional) - a map indicating the custom substitutions to include in the requesti
+*   `substitutions` (optional) - a map indicating the custom substitutions to include in the request
 
 
 # Development
