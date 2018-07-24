@@ -31,7 +31,7 @@ import hudson.model.TaskListener;
 import hudson.util.DaemonThreadFactory;
 import hudson.util.NamingThreadFactory;
 
-/** Submits a build request to Google Cloud Container Builder. */
+/** Submits a build request to Google Cloud Build. */
 public final class CloudBuildStepExecution extends StepExecution {
   private static final long serialVersionUID = 1L;
 
@@ -73,7 +73,7 @@ public final class CloudBuildStepExecution extends StepExecution {
     return executorService;
   }
 
-  /** Starts the thread to poll Google Cloud Container Builder. */
+  /** Starts the thread to poll Google Cloud Build. */
   private void startPolling() {
     task = getExecutorService().submit(() -> {
       try {

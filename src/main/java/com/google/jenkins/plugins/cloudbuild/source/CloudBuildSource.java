@@ -23,9 +23,9 @@ import hudson.ExtensionPoint;
 import hudson.model.AbstractDescribableImpl;
 
 /**
- * The source to be used along with a Google Cloud Container Builder build request.
+ * The source to be used along with a Google Cloud Build build request.
  *
- * @see <a href="https://cloud.google.com/container-builder/docs/concepts/build-requests#source_location">
+ * @see <a href="https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds#source">
  *        Build Requests - Source location</a>
  */
 public abstract class CloudBuildSource extends AbstractDescribableImpl<CloudBuildSource> implements

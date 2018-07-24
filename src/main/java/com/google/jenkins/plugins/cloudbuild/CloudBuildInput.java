@@ -37,7 +37,7 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import net.sf.json.JSONObject;
 
-/** All inputs required to submit a Google Cloud Container Builder build request. */
+/** All inputs required to submit a Google Cloud Build build request. */
 @RequiresDomain(value = CloudBuildScopeRequirement.class)
 public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> implements
     Serializable {

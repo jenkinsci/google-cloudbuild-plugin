@@ -30,8 +30,8 @@ public final class RequestProcessor {
    * @param request the YAML or JSON build request to parse
    * @return the parsed build request
    * @throws IOException if an I/O error occurs while parsing the request
-   * @see <a href="https://cloud.google.com/container-builder/docs/concepts/build-requests">
-   *        Cloud Container Builder - Build Requests</a>
+   * @see <a href="https://cloud.google.com/cloud-build/docs/concepts/build-requests">
+   *        Cloud Build - Build Requests</a>
    */
   public static Build parseBuildRequest(String request) throws IOException {
     // We have to convert the YAML to JSON, rather than using Jackson to parse the YAML directly

@@ -3,24 +3,24 @@ Jenkins Google Cloud Build Plugin
 
 <!-- TODO: Add build status badge and link to Jenkins plugin page. -->
 
-[Google Cloud Container Builder](https://cloud.google.com/container-builder)
+[Google Cloud Build](https://cloud.google.com/cloud-build)
 enables you to build container images and other artifacts from application
 source code. You can configure builds to fetch dependencies, run unit tests,
 static analyses, and integration tests, and create artifacts with build tools
 like docker, gradle, maven, bazel, and gulp. Builds run on Google-hosted
 infrastructure with 120 free build minutes a day and up to 10 concurrent builds.
 
-This Jenkins plugin allows you to call Container Builder as a build step.
+This Jenkins plugin allows you to call Cloud Build as a build step.
 
 
 # Prerequisites
 
 
 
-*   In order to run the Google Cloud Container Builder, you must set up a Google
-    Cloud account and [enable the API](https://cloud.google.com/container-builder/docs/quickstarts/curl).
+*   In order to run Google Cloud Build, you must set up a Google
+    Cloud account and [enable the API](https://cloud.google.com/cloud-build/docs/quickstarts/curl).
 *   You must have a [Jenkins instance set up and running](https://jenkins.io/doc/book/getting-started/).
-*   The Container Builder plugin uses
+*   The Cloud Build plugin uses
     [google-oauth-plugin](https://wiki.jenkins.io/display/JENKINS/Google+OAuth+Plugin)
 to allow the user to specify credentials for connecting to the cloud instance.
 You will need to create a Service Account key in the Google Cloud project, then
@@ -36,17 +36,17 @@ for more details on its usage.
 
 # Hello world
 
-The Google Container Builder Plugin takes a build request in JSON or YAML, in
-the same format as is accepted by the [container builder through curl](https://cloud.google.com/container-builder/docs/quickstarts/curl)
-or [through gcloud](https://cloud.google.com/container-builder/docs/quickstarts/gcloud),
-and sends it to the cloud. See Writing [Custom Build Requests](https://cloud.google.com/container-builder/docs/how-to/writing-build-requests)
+The Google Cloud Build Plugin takes a build request in JSON or YAML, in
+the same format as is accepted by [Cloud Build through curl](https://cloud.google.com/cloud-build/docs/quickstarts/curl)
+or [through gcloud](https://cloud.google.com/cloud-build/docs/quickstarts/gcloud),
+and sends it to the cloud. See Writing [Custom Build Requests](https://cloud.google.com/cloud-build/docs/how-to/writing-build-requests)
 for more information on composing the build request.
 
 The Build step requires selecting the credentials that were configured above,
 and the Build Request. The build request may be specified inline (as
 demonstrated below), or from a file located in the Jenkins workspace.
 
-After the command is sent, the plugin polls the Container Builder to check the
+After the command is sent, the plugin polls the Cloud Build to check the
 status. If the step fails, the Jenkins step is failed. If it succeeds, the
 Jenkins step succeeds.
 
@@ -70,13 +70,13 @@ be appear in the side panel under the Jenkins build.
 The input for this plugin is compatible with the YAML files you would use with
 curl or gcloud. To maintain this compatibility, we do not perform any Jenkins
 substitutions on the build request. For example, if the build request contains
-the string "$BUILD_ID", it will be passed as-is to Container Builder, which will
-interpret it as a [built-in substitution](https://cloud.google.com/container-builder/docs/concepts/build-requests#built-in_substitutions)
-(in this case, $BUILD_ID will be replaced by Container Builder's build ID).
+the string "$BUILD_ID", it will be passed as-is to Cloud Build, which will
+interpret it as a [built-in substitution](https://cloud.google.com/cloud-build/docs/concepts/build-requests#substitutions)
+(in this case, $BUILD_ID will be replaced by Cloud Build's build ID).
 
 To allow customization using Jenkins variables, the plugin allows adding
 user-defined substitutions, in [the same format as in the build
-request](https://cloud.google.com/container-builder/docs/concepts/build-requests#user-defined_substitutions).
+request](https://cloud.google.com/cloud-build/docs/concepts/build-requests#substitutions).
 The value of the custom substitutions is interpreted using the standard Jenkins
 rules. The example below shows how Jenkins variables can be used in a build
 request:
@@ -86,14 +86,14 @@ request:
 
 
 The "Key" fields are subject to the same constraints as the
-[user-defined substitutions](https://cloud.google.com/container-builder/docs/concepts/build-requests#user-defined_substitutions)
-in Container Builder. The "Value" fields for _CUSTOM1 and _CUSTOM2 are
-interpreted through Jenkins at runtime, and the bindings are passed to Container
-Builder.
+[user-defined substitutions](https://cloud.google.com/cloud-build/docs/concepts/build-requests#substitutions)
+in Cloud Build. The "Value" fields for _CUSTOM1 and _CUSTOM2 are
+interpreted through Jenkins at runtime, and the bindings are passed to Cloud
+Build.
 
 
 # Attaching Source Code
-To attach source code to your Google Cloud Container Builder build request,
+To attach source code to your Google Cloud Cloud Build build request,
 check the "Attach source" box, select the type of source you wish to attach, and
 complete the associated fields. You may attach source code from the local
 workspace, from Google Cloud Storage, or from a Google Cloud Source Repository.
@@ -149,7 +149,7 @@ To attach a source repository from a project other than the project associated
 with your credentials, the requestor's service account as a [member with read
 access](https://cloud.google.com/source-repositories/docs/setting-up-repositories)
 to the source repository. To obtain the service account email, either look up
-the Container Builder service account, or simply try this step without
+the Cloud Build service account, or simply try this step without
 permissions and get the email from the error message.
 
 Once the build starts, a link to the Google Cloud Source Repository (in Cloud
@@ -166,7 +166,7 @@ Platform Console) will appear in the side panel for the Jenkins build.
 build/test/deploy pipeline to be specified in the form of
 [Groovy](http://groovy-lang.org/) code, which may be stored in a file
 (`Jenkinsfile`) included alongside the rest of the source code under version
-control. The Container Builder may also be invoked from a pipeline. For example:
+control. The Cloud Build may also be invoked from a pipeline. For example:
 
 
 ```groovy
@@ -189,20 +189,20 @@ node {
 
 This example archives the contents of the `src` directory and uploads the
 resulting tgz-file to Cloud Storage. The build request stored in
-`cloudbuild.yaml` is then sent to Container Builder using the credentials for
+`cloudbuild.yaml` is then sent to Cloud Build using the credentials for
 the `my-project` and with the custom variables `_CUSTOM1` and `_CUSTOM2`
 attached to the request.
 
 The `googleCloudBuild` function accepts the following parameters:
 
 *   `credentialsId` (required) - the string identifying which credentials (provided by the Google OAuth plugin) to send in the request
-*   `request` (required) - the build request to send to Container Builder. This must be one of the following:
+*   `request` (required) - the build request to send to Cloud Build. This must be one of the following:
     *   `file(FILENAME)` - sends the contents of `FILENAME` as the build request
     *   `inline(REQUEST)` - sends `REQUEST` (a YAML or JSON string) as the build request
 *   `source` (optional) - the source to attach to the build request. If provided, this must be one of the following:
     *   `local(PATH)` - archives the contents of `PATH`, uploads the resulting tgz to Cloud Storage and uses that as the source in the build request
     *   `storage(bucket: BUCKET, object: OBJECT)` - uses an existing Cloud Storage object as the source in the build request
-    *   `repo(projectId: PROJECT_ID, repoName: REPO_NAME, branch: BRANCH, tag: TAG, commit: COMMIT)` - uses a Cloud Source Repository as the source in the build request. Exactly one of branch, tag, or commit must be specified. The projectId and repoName parameters may be omitted, in which case the same semantics are used as [described in the API documentation](https://cloud.google.com/container-builder/docs/api/reference/rest/v1/RepoSource).
+    *   `repo(projectId: PROJECT_ID, repoName: REPO_NAME, branch: BRANCH, tag: TAG, commit: COMMIT)` - uses a Cloud Source Repository as the source in the build request. Exactly one of branch, tag, or commit must be specified. The projectId and repoName parameters may be omitted, in which case the same semantics are used as [described in the API documentation](https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/RepoSource).
 *   `substitutions` (optional) - a map indicating the custom substitutions to include in the request
 
 

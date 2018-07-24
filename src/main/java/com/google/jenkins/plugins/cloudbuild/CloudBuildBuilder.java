@@ -32,7 +32,7 @@ import hudson.model.BuildListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 
-/** A Jenkins builder that submits a build request to Google Cloud Container Builder. */
+/** A Jenkins builder that submits a build request to Google Cloud Build. */
 public class CloudBuildBuilder extends Builder {
   @Nonnull
   private final CloudBuildInput input;

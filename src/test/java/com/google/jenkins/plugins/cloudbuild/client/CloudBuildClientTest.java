@@ -131,7 +131,7 @@ public class CloudBuildClientTest {
   }
 
   /**
-   * Gets the status for a simulated Cloud Container Builder operation.
+   * Gets the status for a simulated Cloud Build operation.
    * <p>
    * If the current system time (in milliseconds) is earlier than {@code startTime}, the status will
    * be {@code "QUEUED"}, otherwise if the system time is earlier than {@code endTime}, the status
@@ -144,8 +144,8 @@ public class CloudBuildClientTest {
    * @return the status of the simulated build, according to the current system time
    * @see System#currentTimeMillis()
    * @see Build#getStatus()
-   * @see <a href="https://cloud.google.com/container-builder/docs/api/reference/rest/v1/projects.builds#status">
-   *          Cloud Container Builder - Resource: Build - Status</a>
+   * @see <a href="https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds#status">
+   *          Cloud Build - Resource: Build - Status</a>
    */
   private String getStatus(long startTime, long endTime, boolean success) {
     long time = System.currentTimeMillis();
@@ -163,8 +163,7 @@ public class CloudBuildClientTest {
    * operation either succeeds or fails. The corresponding result should be applied to the Jenkins
    * build.
    *
-   * @param cloudBuildSucceeds indicates whether the Cloud Container Build operation should succeed
-   *     or fail
+   * @param cloudBuildSucceeds indicates whether the Cloud Build operation should succeed or fail
    * @throws Exception if an error occurs while running the test
    */
   public void testWaitForSuccess(boolean cloudBuildSucceeds) throws Exception {

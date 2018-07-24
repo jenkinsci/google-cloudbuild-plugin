@@ -20,7 +20,7 @@ import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
 import hudson.ExtensionPoint;
 import hudson.model.AbstractDescribableImpl;
 
-/** Generates the request to submit to Google Cloud Container Builder. */
+/** Generates the request to submit to Google Cloud Build. */
 public abstract class CloudBuildRequest extends AbstractDescribableImpl<CloudBuildRequest>
     implements ExtensionPoint, Serializable {
   public abstract String expand(BuildContext context) throws IOException, InterruptedException;
