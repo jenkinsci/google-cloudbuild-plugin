@@ -34,7 +34,7 @@ import hudson.FilePath;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 
-/** A Jenkins build step that submits a build request to Google Cloud Container Builder. */
+/** A Jenkins build step that submits a build request to Google Cloud Build. */
 public final class CloudBuildStep extends Step implements Serializable {
   private static final long serialVersionUID = 1L;
 

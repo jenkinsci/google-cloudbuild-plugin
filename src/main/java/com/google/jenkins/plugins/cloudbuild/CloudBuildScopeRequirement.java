@@ -18,7 +18,7 @@ import java.util.Collections;
 
 import com.google.jenkins.plugins.credentials.oauth.GoogleOAuth2ScopeRequirement;
 
-/** Indicates OAuth2 scopes required to access Cloud Container Builder and Cloud Storage. */
+/** Indicates OAuth2 scopes required to access Cloud Build and Cloud Storage. */
 public class CloudBuildScopeRequirement extends GoogleOAuth2ScopeRequirement {
   @Override
   public Collection<String> getScopes() {

@@ -37,9 +37,9 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 
 /**
- * Client for communicating with Google Cloud Container Builder API.
+ * Client for communicating with Google Cloud Build API.
  *
- * @see <a href="https://cloud.google.com/container-builder/">Container Builder</a>
+ * @see <a href="https://cloud.google.com/cloud-build/">Cloud Build</a>
  */
 public class CloudBuildClient {
   private final CloudBuild cloudBuild;
@@ -55,7 +55,7 @@ public class CloudBuildClient {
   }
 
   /**
-   * Sends a build request to Cloud Container Builder.
+   * Sends a build request to Cloud Build.
    *
    * @param request the YAML or JSON request to send
    * @param source the {@link Source} to use for the build request
@@ -63,7 +63,7 @@ public class CloudBuildClient {
    * @return the ID of the newly-submitted build
    * @throws IOException if an I/O error occurs in processing the request
    * @see <a href="https://cloud.google.com/container-builder/docs/concepts/build-requests">
-   *        Cloud Container Builder - Build Requests</a>
+   *        Cloud Build - Build Requests</a>
    */
   public String sendBuildRequest(String request, Source source, Map<String, String> substitutions)
       throws IOException {
@@ -128,7 +128,7 @@ public class CloudBuildClient {
   /**
    * Add actions linking to the source used for the current Jenkins build.
    *
-   * @param source the {@link Source} attached to the current Cloud Container build request
+   * @param source the {@link Source} attached to the current Cloud Build request
    */
   private void addSourceActions(Source source) {
     if (source == null) {
@@ -167,7 +167,7 @@ public class CloudBuildClient {
   /**
    * Get the revision (branch, tag, or commit) referred to by the provided {@code RepoSource}.
    *
-   * @param rs the {@link RepoSource} attached to a Cloud Container Build request
+   * @param rs the {@link RepoSource} attached to a Cloud Build request
    * @return the branch, tag, or commit referred to by {@code rs}, or the empty string if neither
    *     the branch, tag, nor commit are set
    */

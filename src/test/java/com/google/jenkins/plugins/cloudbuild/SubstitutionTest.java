@@ -33,7 +33,7 @@ public class SubstitutionTest {
     assertEquals(Kind.ERROR, descriptor.doCheckKey("").kind);
 
     // The following keys do not conform to the requirements for user-defined substitutions.
-    // See https://cloud.google.com/container-builder/docs/concepts/build-requests#user-defined_substitutions
+    // See https://cloud.google.com/cloud-build/docs/concepts/build-requests#substitutions
     assertEquals(Kind.ERROR, descriptor.doCheckKey("FOO").kind);
     assertEquals(Kind.ERROR, descriptor.doCheckKey("_foo").kind);
     assertEquals(Kind.ERROR, descriptor.doCheckKey("_FOO.BAR").kind);

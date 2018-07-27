@@ -123,8 +123,7 @@ public class MockCloudServices {
   }
 
   /**
-   * Calls the provided {@code handler} when a request is made to start a Cloud Container Builder
-   * build.
+   * Calls the provided {@code handler} when a request is made to start a Cloud Build build.
    *
    * @param handler the handler to call
    * @throws IOException if an error occurs while setting up the mock
@@ -135,8 +134,8 @@ public class MockCloudServices {
   }
 
   /**
-   * Calls the provided {@code handler} when a request is made to check the status of a Cloud
-   * Container Builder build.
+   * Calls the provided {@code handler} when a request is made to check the status of a Cloud Build
+   * build.
    *
    * @param handler the handler to call
    * @throws IOException if an error occurs while setting up the mock

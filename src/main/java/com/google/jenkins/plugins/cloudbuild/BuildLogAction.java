@@ -15,7 +15,7 @@ package com.google.jenkins.plugins.cloudbuild;
 
 import hudson.model.Action;
 
-/** Provides a link to the log for a Google Cloud Container Builder build request. */
+/** Provides a link to the log for a Google Cloud Build build request. */
 public class BuildLogAction implements Action {
   private final String logUrl;
 
