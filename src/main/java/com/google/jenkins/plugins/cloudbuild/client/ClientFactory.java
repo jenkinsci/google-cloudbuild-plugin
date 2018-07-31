@@ -25,7 +25,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.cloudbuild.v1.CloudBuild;
 import com.google.api.services.storage.Storage;
 import com.google.jenkins.plugins.cloudbuild.CloudBuildScopeRequirement;
-import com.google.jenkins.plugins.credentials.oauth.GoogleRobotPrivateKeyCredentials;
+import com.google.jenkins.plugins.credentials.oauth.GoogleRobotCredentials;
 import hudson.AbortException;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -40,7 +40,7 @@ public class ClientFactory {
   private final TaskListener listener;
   private final HttpTransport transport;
   private final JsonFactory jsonFactory;
-  private final GoogleRobotPrivateKeyCredentials credentials;
+  private final GoogleRobotCredentials credentials;
   private final HttpRequestInitializer gcred;
 
   public ClientFactory(Run<?, ?> run, TaskListener listener, String credentialsId)
@@ -61,11 +61,18 @@ public class ClientFactory {
 
     CloudBuildScopeRequirement requirement = new CloudBuildScopeRequirement();
     this.credentials = CredentialsProvider.findCredentialById(
-        credentialsId, GoogleRobotPrivateKeyCredentials.class, run, requirement);
+        credentialsId, GoogleRobotCredentials.class, run, requirement);
     if (credentials == null) {
       throw new AbortException(Messages.ClientFactory_FailedToRetrieveCredentials(credentialsId));
     }
-    this.gcred = credentials.getGoogleCredential(requirement);
+    try {
+      this.gcred = credentials.getGoogleCredential(requirement);
+    } catch (GeneralSecurityException e) {
+      throw new AbortException(
+          Messages.ClientFactory_FailedToRetrieveGoogleCredentials(
+              credentialsId,
+              e.getMessage()));
+    }
   }
 
   private static synchronized HttpTransport getDefaultTransport()
