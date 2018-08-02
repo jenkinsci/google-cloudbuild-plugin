@@ -25,7 +25,9 @@ This Jenkins plugin allows you to call Cloud Build as a build step.
 to allow the user to specify credentials for connecting to the cloud instance.
 You will need to create a Service Account key in the Google Cloud project, then
 in Jenkins select Google Service Account from private key and upload the private
-key. See the [google oauth plugin instructions](https://wiki.jenkins.io/display/JENKINS/Google+OAuth+Plugin)
+key. Alternatively, if your Jenkins master is running on [Google Compute Engine](https://cloud.google.com/compute/),
+credentials may be obtained from the [metadata server](https://cloud.google.com/compute/docs/storing-retrieving-metadata).
+See the [google oauth plugin instructions](https://wiki.jenkins.io/display/JENKINS/Google+OAuth+Plugin)
 for more details and links.
 *   Some of the examples below use the
     [google-storage-plugin](https://wiki.jenkins.io/display/JENKINS/Google+Cloud+Storage+Plugin)
