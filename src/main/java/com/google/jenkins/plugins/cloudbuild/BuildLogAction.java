@@ -25,7 +25,7 @@ public class BuildLogAction implements Action {
 
   @Override
   public String getIconFileName() {
-    return "/plugin/google-cloudbuild/images/Container_Registry.svg";
+    return "/plugin/google-cloudbuild/images/Cloud_Build.svg";
   }
 
   @Override
