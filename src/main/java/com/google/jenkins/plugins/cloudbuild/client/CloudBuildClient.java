@@ -62,7 +62,7 @@ public class CloudBuildClient {
    * @param substitutions the custom substitutions to apply
    * @return the ID of the newly-submitted build
    * @throws IOException if an I/O error occurs in processing the request
-   * @see <a href="https://cloud.google.com/container-builder/docs/concepts/build-requests">
+   * @see <a href="https://cloud.google.com/cloud-build/docs/concepts/build-requests">
    *        Cloud Build - Build Requests</a>
    */
   public String sendBuildRequest(String request, Source source, Map<String, String> substitutions)
