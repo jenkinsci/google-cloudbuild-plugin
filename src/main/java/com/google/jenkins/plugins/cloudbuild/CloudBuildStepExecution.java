@@ -24,6 +24,9 @@ import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
 
 import com.google.jenkins.plugins.cloudbuild.client.ClientFactory;
+import com.google.jenkins.plugins.cloudbuild.client.CloudBuildClient;
+import com.google.jenkins.plugins.cloudbuild.client.CloudStorageClient;
+import com.google.jenkins.plugins.cloudbuild.client.LogUtil;
 import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
 import com.google.jenkins.plugins.cloudbuild.context.PipelineBuildContext;
 import hudson.model.Run;
@@ -77,7 +80,16 @@ public final class CloudBuildStepExecution extends StepExecution {
   private void startPolling() {
     task = getExecutorService().submit(() -> {
       try {
-        getClients().cloudBuild().waitForSuccess(buildId);
+        CloudBuildClient cloudBuild = getClients().cloudBuild();
+
+        LogUtil.LogPoller poller = null;
+        if (input.isStreamLog()) {
+          LogUtil.LogLocation logLocation = cloudBuild.getGcsLogUrl(buildId);
+          CloudStorageClient storage = clients.storage();
+          poller = storage.createStreamContentPoller(logLocation);
+        }
+
+        cloudBuild.waitForSuccess(buildId, poller);
         getContext().onSuccess(null);
       } catch (Exception e) {
         getContext().onFailure(e);

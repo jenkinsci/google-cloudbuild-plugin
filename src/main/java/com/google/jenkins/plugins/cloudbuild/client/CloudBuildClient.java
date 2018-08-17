@@ -18,6 +18,9 @@ import java.io.PrintStream;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.cloudbuild.v1.CloudBuild;
@@ -90,6 +93,21 @@ public class CloudBuildClient {
     return metadata.getBuild().getId();
   }
 
+  @Nonnull
+  public LogUtil.LogLocation getGcsLogUrl(@Nonnull String buildId) throws IOException {
+    Build build = cloudBuild.projects().builds().get(projectId, buildId).execute();
+    // https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds?#Build.FIELDS.logs_bucket
+    try {
+      return new LogUtil.LogLocation(String.format(
+          "%s/log-%s.txt",
+          build.getLogsBucket(),
+          build.getId()
+      ));
+    } catch (IllegalArgumentException e) {
+      throw new IOException("Failed to retrieve the log url", e);
+    }
+  }
+
   /**
    * Waits for the cloud build operation to complete successfully or throws an exception if the
    * operation fails.
@@ -99,12 +117,31 @@ public class CloudBuildClient {
    * @throws IOException if an I/O error occurs while polling for build completion
    */
   public void waitForSuccess(String buildId) throws InterruptedException, IOException {
+    waitForSuccess(buildId, null);
+  }
+
+  /**
+   * Waits for the cloud build operation to complete successfully or throws an exception if the
+   * operation fails.
+   *
+   * @param buildId the ID of the build to wait for
+   * @param poller interface to trigger poll and output logs
+   * @throws InterruptedException if polling was interrupted
+   * @throws IOException if an I/O error occurs while polling for build completion
+   * @since 0.3
+   */
+  public void waitForSuccess(String buildId, @CheckForNull LogUtil.LogPoller poller)
+      throws InterruptedException, IOException {
     // Wait for the build to complete
     while (true) {
       Build buildCheck = cloudBuild.projects().builds().get(projectId, buildId).execute();
       String status = buildCheck.getStatus();
 
-      logger.println(Messages.CloudBuildClient_CurrentBuildStatus(status));
+      if (poller != null) {
+        poller.poll();
+      } else {
+        logger.println(Messages.CloudBuildClient_CurrentBuildStatus(status));
+      }
       if (status.equals("QUEUED") || status.equals("WORKING")) {
         // Continue iterating
         TimeUnit.SECONDS.sleep(1);

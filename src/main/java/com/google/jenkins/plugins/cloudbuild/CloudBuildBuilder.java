@@ -22,6 +22,8 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import com.google.api.services.cloudbuild.v1.model.Source;
 import com.google.jenkins.plugins.cloudbuild.client.ClientFactory;
 import com.google.jenkins.plugins.cloudbuild.client.CloudBuildClient;
+import com.google.jenkins.plugins.cloudbuild.client.CloudStorageClient;
+import com.google.jenkins.plugins.cloudbuild.client.LogUtil;
 import com.google.jenkins.plugins.cloudbuild.context.BuildContext;
 import com.google.jenkins.plugins.cloudbuild.context.FreeStyleBuildContext;
 import hudson.Extension;
@@ -57,7 +59,16 @@ public class CloudBuildBuilder extends Builder {
     CloudBuildClient cloudBuild = clients.cloudBuild();
     String buildId = cloudBuild.sendBuildRequest(
         finalRequest, buildSource, input.getSubstitutionMap(context));
-    cloudBuild.waitForSuccess(buildId);
+
+    LogUtil.LogPoller poller = null;
+
+    if (input.isStreamLog()) {
+      LogUtil.LogLocation logLocation = cloudBuild.getGcsLogUrl(buildId);
+      CloudStorageClient storage = clients.storage();
+      poller = storage.createStreamContentPoller(logLocation);
+    }
+
+    cloudBuild.waitForSuccess(buildId, poller);
     return true;
   }
 

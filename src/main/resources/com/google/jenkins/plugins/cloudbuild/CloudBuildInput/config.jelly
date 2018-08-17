@@ -20,4 +20,7 @@
   </f:optionalBlock>
   <f:dropdownDescriptorSelector title="${%Request}" field="request" />
   <f:property field="substitutionList"/>
+  <f:entry field="streamLog" title="${%Stream build log}">
+    <f:checkbox />
+  </f:entry>
 </j:jelly>
