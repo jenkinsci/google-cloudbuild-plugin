@@ -14,14 +14,20 @@
 package com.google.jenkins.plugins.cloudbuild.client;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -32,9 +38,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.Answers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.google.api.client.http.HttpMethods;
@@ -59,6 +68,11 @@ public class CloudStorageClientTest {
   @Mock(answer = Answers.CALLS_REAL_METHODS)
   public MockHttpTransport transport;
 
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
+
+  public TaskListener listener;
+
   private JsonFactory json = new JacksonFactory();
 
   private CloudStorageClient storage;
@@ -66,12 +80,13 @@ public class CloudStorageClientTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
+    listener = Mockito.spy(TaskListener.NULL);
 
     storage = new CloudStorageClient(
         new Storage.Builder(transport, json, req -> {})
             .setApplicationName("google-cloudbuild-plugin-test")
             .build(),
-        "test-project", TaskListener.NULL);
+        "test-project", listener);
   }
 
   @Test
@@ -189,5 +204,231 @@ public class CloudStorageClientTest {
 
     assertEquals(1, bucketsCreated.size());
     assertEquals(tempBucket, bucketsCreated.get(0));
+  }
+
+  @Test
+  public void createStreamContentPollerSuccess() throws Exception {
+    when(transport.buildRequest(
+        eq(HttpMethods.GET),
+        // https://cloud.google.com/storage/docs/json_api/v1/objects/get
+        contains("/storage/v1/b/test_bucket/o/log-xxxxxxxx.txt")
+    ))
+        .thenReturn(
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(HttpStatusCodes.STATUS_CODE_OK);
+                response.setContentType("application/octet-stream");
+                response.setContent("foobar\n");
+                return response;
+              }
+            },
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                assertThat(this.getFirstHeaderValue("Range"), startsWith("bytes=7-"));
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(HttpStatusCodes.STATUS_CODE_OK);
+                response.setContentType("application/octet-stream");
+                response.setContent("bazqux\n");
+                return response;
+              }
+            }
+        );
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    when(listener.getLogger()).thenReturn(new PrintStream(buffer));
+    LogUtil.LogPoller poller = storage.createStreamContentPoller(
+        new LogUtil.LogLocation(
+            "gs://test_bucket/log-xxxxxxxx.txt"
+        )
+    );
+    poller.poll();
+    assertEquals("foobar\n", buffer.toString());
+    poller.poll();
+    assertEquals("foobar\nbazqux\n", buffer.toString());
+  }
+
+  @Test
+  public void createStreamContentPollerNotFound() throws Exception {
+    when(transport.buildRequest(
+        eq(HttpMethods.GET),
+        // https://cloud.google.com/storage/docs/json_api/v1/objects/get
+        contains("/storage/v1/b/test_bucket/o/log-xxxxxxxx.txt")
+    ))
+        .thenReturn(
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(HttpStatusCodes.STATUS_CODE_NOT_FOUND);
+                response.setContentType("application/octet-stream");
+                response.setContent("foobar\n");
+                return response;
+              }
+            },
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                assertThat(
+                    this.getFirstHeaderValue("Range"),
+                    anyOf(startsWith("bytes=0-"), nullValue())
+                );
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(HttpStatusCodes.STATUS_CODE_OK);
+                response.setContentType("application/octet-stream");
+                response.setContent("bazqux\n");
+                return response;
+              }
+            }
+        );
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    when(listener.getLogger()).thenReturn(new PrintStream(buffer));
+    LogUtil.LogPoller poller = storage.createStreamContentPoller(
+        new LogUtil.LogLocation(
+            "gs://test_bucket/log-xxxxxxxx.txt"
+        )
+    );
+    poller.poll();
+    assertThat(buffer.toString(), not(containsString("foobar\n")));
+    poller.poll();
+    assertThat(buffer.toString(), endsWith("bazqux\n"));
+  }
+
+  @Test
+  public void createStreamContentPollerNotSatisfiable() throws Exception {
+    when(transport.buildRequest(
+        eq(HttpMethods.GET),
+        // https://cloud.google.com/storage/docs/json_api/v1/objects/get
+        contains("/storage/v1/b/test_bucket/o/log-xxxxxxxx.txt")
+    ))
+        .thenReturn(
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(HttpStatusCodes.STATUS_CODE_OK);
+                response.setContentType("application/octet-stream");
+                response.setContent("foobar\n");
+                return response;
+              }
+            },
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(416);
+                response.setContentType("application/octet-stream");
+                response.setContent("not satisfiable\n");
+                return response;
+              }
+            },
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                assertThat(this.getFirstHeaderValue("Range"), startsWith("bytes=7-"));
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(HttpStatusCodes.STATUS_CODE_OK);
+                response.setContentType("application/octet-stream");
+                response.setContent("bazqux\n");
+                return response;
+              }
+            }
+        );
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    when(listener.getLogger()).thenReturn(new PrintStream(buffer));
+    LogUtil.LogPoller poller = storage.createStreamContentPoller(
+        new LogUtil.LogLocation(
+            "gs://test_bucket/log-xxxxxxxx.txt"
+        )
+    );
+    poller.poll();
+    assertEquals("foobar\n", buffer.toString());
+    poller.poll();
+    assertEquals("foobar\n", buffer.toString());
+    poller.poll();
+    assertEquals("foobar\nbazqux\n", buffer.toString());
+  }
+
+  @Test
+  public void createStreamContentPollerServerError() throws Exception {
+    when(transport.buildRequest(
+        eq(HttpMethods.GET),
+        // https://cloud.google.com/storage/docs/json_api/v1/objects/get
+        contains("/storage/v1/b/test_bucket/o/log-xxxxxxxx.txt")
+    ))
+        .thenReturn(
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(HttpStatusCodes.STATUS_CODE_OK);
+                response.setContentType("application/octet-stream");
+                response.setContent("foobar\n");
+                return response;
+              }
+            },
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(HttpStatusCodes.STATUS_CODE_SERVICE_UNAVAILABLE);
+                response.setContentType("application/octet-stream");
+                response.setContent("unavailable\n");
+                return response;
+              }
+            },
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                assertThat(this.getFirstHeaderValue("Range"), startsWith("bytes=7-"));
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(HttpStatusCodes.STATUS_CODE_OK);
+                response.setContentType("application/octet-stream");
+                response.setContent("bazqux\n");
+                return response;
+              }
+            }
+        );
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    when(listener.getLogger()).thenReturn(new PrintStream(buffer));
+    LogUtil.LogPoller poller = storage.createStreamContentPoller(
+        new LogUtil.LogLocation(
+            "gs://test_bucket/log-xxxxxxxx.txt"
+        )
+    );
+    poller.poll();
+    assertEquals("foobar\n", buffer.toString());
+    poller.poll();
+    poller.poll();
+    assertThat(buffer.toString(), endsWith("bazqux\n"));
+  }
+
+  @Test
+  public void createStreamContentPollerEnexpectedError() throws Exception {
+    when(transport.buildRequest(
+        eq(HttpMethods.GET),
+        // https://cloud.google.com/storage/docs/json_api/v1/objects/get
+        contains("/storage/v1/b/test_bucket/o/log-xxxxxxxx.txt")
+    ))
+        .thenReturn(
+            new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+                response.setStatusCode(HttpStatusCodes.STATUS_CODE_FORBIDDEN);
+                response.setContentType("application/octet-stream");
+                response.setContent("forbidden\n");
+                return response;
+              }
+            }
+        );
+    LogUtil.LogPoller poller = storage.createStreamContentPoller(
+        new LogUtil.LogLocation(
+            "gs://test_bucket/log-xxxxxxxx.txt"
+        )
+    );
+    exception.expect(IOException.class);
+    poller.poll();
   }
 }

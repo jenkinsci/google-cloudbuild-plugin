@@ -199,4 +199,41 @@ public class CloudBuildStepTest {
     assertThat(run.getAction(StorageAction.class).getUrlName(), containsString("jenkins-tmp_foo"));
     assertEquals("https://logurl", run.getAction(BuildLogAction.class).getUrlName());
   }
+
+  @Test
+  public void pipelineWithLog() throws Exception {
+    String script = Resources.toString(
+        getClass().getResource(RESOURCE_BASE + "pipelineWithLog.groovy"),
+        Charset.defaultCharset());
+    job.setDefinition(new CpsFlowDefinition(script, false));
+
+    job = j.configRoundtrip(job);
+
+    cloud.onStartBuild((build, req, resp) -> {
+      return new Operation()
+          .setName("build-42")
+          .setMetadata(new BuildOperationMetadata()
+              .setBuild(build
+                  .setId("42")
+                  .setLogUrl("https://logurl")
+                  .setLogsBucket("gs://logbucket")));
+    });
+
+    cloud.onCheckBuild((x, req, resp) -> {
+      return new Build()
+          .setId("42")
+          .setStatus("SUCCESS")
+          .setLogUrl("https://logurl")
+          .setLogsBucket("gs://logbucket");
+    });
+
+    cloud.onGetObjectMedia((x, req, resp) -> {
+        assertThat(req.getUrl(), containsString("/b/logbucket/o/log-42.txt"));
+        return "foobar\n";
+    });
+
+    WorkflowRun run = j.buildAndAssertSuccess(job);
+
+    j.assertLogContains("foobar\n", run);
+  }
 }
