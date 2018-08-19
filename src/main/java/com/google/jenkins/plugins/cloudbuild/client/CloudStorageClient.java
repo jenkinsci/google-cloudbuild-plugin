@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.storage.Storage;
 import com.google.api.services.storage.model.Bucket;
@@ -147,5 +150,43 @@ public class CloudStorageClient {
     hyperlinkBucket(tempBucketName);
     logger.println();
     return tempBucketName;
+  }
+
+  /**
+   * Creates a bucket for storing temporary objects if it doesn't exist.
+   *
+   * bucket the name of the Cloud Storage bucket
+   * @throws IOException if an I/O error occurs while communicating with the Cloud Storage API to
+   *     find or create the bucket
+   */
+  public void createBucketIfNotExists(@Nonnull String bucket) throws IOException {
+    PrintStream logger = listener.getLogger();
+
+    logger.println(Messages.CloudStorageClient_CheckBucketExistence(bucket));
+    try {
+      storage.buckets().get(bucket).execute();
+      // found!
+      return;
+    } catch (HttpResponseException e) {
+      if (e.getStatusCode() != 404) {
+        throw e;
+      }
+    }
+
+    logger.println(Messages.CloudStorageClient_CreatingBucket());
+    storage.buckets().insert(
+        projectId,
+        new Bucket()
+            .setName(bucket)
+            .setLifecycle(
+                new Lifecycle()
+                    .setRule(Collections.singletonList(
+                        new Rule()
+                            .setAction(new Action().setType("Delete"))
+                            .setCondition(new Condition().setAge(TEMP_BUCKET_TTL_DAYS))))))
+        .execute();
+    logger.println(Messages.CloudStorageClient_CreatedBucket());
+    hyperlinkBucket(bucket);
+    logger.println();
   }
 }

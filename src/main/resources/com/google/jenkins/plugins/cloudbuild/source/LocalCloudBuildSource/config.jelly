@@ -16,4 +16,9 @@
   <f:entry title="${%Path}" field="path">
     <f:textbox/>
   </f:entry>
+  <f:advanced>
+    <f:entry title="${%Staging Directory}" field="stagingDir">
+      <f:textbox/>
+    </f:entry>
+  </f:advanced>
 </j:jelly>
