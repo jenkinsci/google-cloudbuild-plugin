@@ -50,11 +50,13 @@ public class CloudBuildBuilder extends Builder {
   @Override
   public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
       throws IOException, InterruptedException {
-    BuildContext context = new FreeStyleBuildContext(build, listener);
+    // allow specifying proxy like ${https_proxy}
+    String proxy = build.getEnvironment(listener).expand(input.getProxy());
+    BuildContext context = new FreeStyleBuildContext(build, listener, proxy);
     ClientFactory clients = new ClientFactory(build, listener, input.getCredentialsId());
     String finalRequest = input.getRequest().expand(context);
     Source buildSource = input.getSourceOrDefault().prepare(context, clients);
-    CloudBuildClient cloudBuild = clients.cloudBuild();
+    CloudBuildClient cloudBuild = clients.cloudBuild(proxy);
     String buildId = cloudBuild.sendBuildRequest(
         finalRequest, buildSource, input.getSubstitutionMap(context));
     cloudBuild.waitForSuccess(buildId);

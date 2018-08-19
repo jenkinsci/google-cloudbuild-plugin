@@ -41,4 +41,11 @@ public interface BuildContext {
   FilePath getWorkspace() throws IOException, InterruptedException;
 
   TaskListener getListener() throws IOException, InterruptedException;
+
+  /**
+   * @return proxy to use for Cloud Platform services.
+   * @since 0.3
+   */
+  @CheckForNull
+  String getProxy();
 }

@@ -102,7 +102,7 @@ public class LocalCloudBuildSource extends CloudBuildSource implements Serializa
       throw new AbortException(Messages.LocalCloudBuildSource_SourcePathDoesNotExist());
     }
 
-    CloudStorageClient storage = clients.storage();
+    CloudStorageClient storage = clients.storage(context.getProxy());
     String bucket = storage.createTempBucket();
     String objectBaseName = String.format("source/%d-%s", System.currentTimeMillis(),
         UUID.randomUUID().toString());

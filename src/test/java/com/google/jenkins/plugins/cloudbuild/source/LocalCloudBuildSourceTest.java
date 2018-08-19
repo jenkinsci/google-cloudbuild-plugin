@@ -60,7 +60,7 @@ public class LocalCloudBuildSourceTest {
   @Before
   public void setUp() throws IOException {
     MockitoAnnotations.initMocks(this);
-    when(clients.storage()).thenReturn(storage);
+    when(clients.storage(any())).thenReturn(storage);
   }
 
   @Test
