@@ -19,11 +19,15 @@ import java.io.Serializable;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
 import com.google.api.services.cloudbuild.v1.model.Source;
@@ -51,8 +55,16 @@ import hudson.util.io.ArchiverFactory;
 public class LocalCloudBuildSource extends CloudBuildSource implements Serializable {
   private static final long serialVersionUID = 1L;
 
+  private static final Pattern GS_URI = Pattern.compile(
+    "^gs://(?<bucket>[^/]+)(?:/(?<dir>.*))?$",
+    Pattern.CASE_INSENSITIVE
+  );
+
   @Nonnull
   private final String path;
+
+  @CheckForNull
+  private String stagingDir;
 
   @DataBoundConstructor
   public LocalCloudBuildSource(@Nonnull String path) {
@@ -62,6 +74,23 @@ public class LocalCloudBuildSource extends CloudBuildSource implements Serializa
   @Nonnull
   public String getPath() {
     return path;
+  }
+
+  /**
+   * @param stagingDir Cloud Storage directory to put source.
+   * @since 0.3
+   */
+  @DataBoundSetter
+  public void setStagingDir(String stagingDir) {
+    this.stagingDir = stagingDir;
+  }
+
+  /**
+   * @return stagingDir Cloud Storage directory to put source.
+   * @since 0.3
+   */
+  public String getStagingDir() {
+    return stagingDir;
   }
 
   /** The executor to be used for asynchronous tasks. */
@@ -75,6 +104,18 @@ public class LocalCloudBuildSource extends CloudBuildSource implements Serializa
               new DaemonThreadFactory(), CloudBuildBuilder.class.getCanonicalName()));
     }
     return executorService;
+  }
+
+  private static class StagingDir {
+    @Nonnull
+    public final String bucket;
+    @Nonnull
+    public final String dir;
+
+    public StagingDir(String bucket, String dir) {
+      this.bucket = bucket;
+      this.dir = dir;
+    }
   }
 
   /**
@@ -103,9 +144,13 @@ public class LocalCloudBuildSource extends CloudBuildSource implements Serializa
     }
 
     CloudStorageClient storage = clients.storage();
-    String bucket = storage.createTempBucket();
-    String objectBaseName = String.format("source/%d-%s", System.currentTimeMillis(),
-        UUID.randomUUID().toString());
+    StagingDir stagingDir = prepareStatingDir(storage);
+    String bucket = stagingDir.bucket;
+    String objectBaseName = (!"".equals(stagingDir.dir))
+        ? String.format("%s/%d-%s", stagingDir.dir, System.currentTimeMillis(),
+            UUID.randomUUID().toString())
+        : String.format("%d-%s", System.currentTimeMillis(),
+            UUID.randomUUID().toString());
 
     InputStream contents;
     String object;
@@ -133,6 +178,34 @@ public class LocalCloudBuildSource extends CloudBuildSource implements Serializa
         new StorageSource()
             .setBucket(bucket)
             .setObject(object));
+  }
+
+  private StagingDir prepareStatingDir(CloudStorageClient storage)
+      throws IOException {
+    String stagingDir = getStagingDir();
+    if (stagingDir == null || stagingDir.isEmpty()) {
+      return new StagingDir(
+          storage.createTempBucket(),
+          "source"
+      );
+    }
+
+    Matcher m = GS_URI.matcher(stagingDir);
+    if (!m.matches()) {
+      throw new AbortException(
+          Messages.LocalCloudBuildSource_InvalidGsUri(stagingDir)
+      );
+    }
+
+    String bucket = m.group("bucket");
+    String dir = m.group("dir");
+    if (dir == null) {
+      dir = "";
+    }
+
+    storage.createBucketIfNotExists(bucket);
+
+    return new StagingDir(bucket, dir);
   }
 
   /** Descriptor for {@link LocalCloudBuildSource}. */
