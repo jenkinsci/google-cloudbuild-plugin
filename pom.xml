@@ -11,7 +11,7 @@
   <artifactId>google-cloudbuild</artifactId>
   <packaging>hpi</packaging>
   <name>Google Cloud Build Plugin</name>
-  <version>0.2.1</version>
+  <version>0.2.2-SNAPSHOT</version>
   <url>https://wiki.jenkins.io/display/JENKINS/Google+Cloud+Build+Plugin</url>
   <description>
     This plugin provides the "Google CloudBuild" build step for creating and running
@@ -47,7 +47,7 @@
     <connection>scm:git:git://github.com/jenkinsci/google-cloudbuild-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/google-cloudbuild-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/google-cloudbuild-plugin</url>
-    <tag>google-cloudbuild-0.2.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <repositories>
