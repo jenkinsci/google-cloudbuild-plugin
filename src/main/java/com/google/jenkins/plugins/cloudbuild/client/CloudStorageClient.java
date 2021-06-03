@@ -13,6 +13,7 @@
  */
 package com.google.jenkins.plugins.cloudbuild.client;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -20,6 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.storage.Storage;
 import com.google.api.services.storage.model.Bucket;
@@ -147,5 +151,50 @@ public class CloudStorageClient {
     hyperlinkBucket(tempBucketName);
     logger.println();
     return tempBucketName;
+  }
+
+  @Nonnull
+  public LogUtil.LogPoller createStreamContentPoller(@Nonnull final LogUtil.LogLocation location) {
+    return new LogUtil.LogPoller() {
+      private long bytesRead = 0;
+
+      @Override
+      public void poll() throws IOException {
+        Storage.Objects.Get req = storage.objects()
+            .get(location.getBucketName(), location.getObjectName());
+        req.getMediaHttpDownloader().setBytesDownloaded(bytesRead);
+
+        // Somehow I can't use CountingOutputStream here.
+        // executeMediaAndDownloadTo() looks stuck.
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+          try {
+            req.executeMediaAndDownloadTo(out);
+          } catch (HttpResponseException e) {
+            int code = e.getStatusCode();
+            if (code == 404) {
+              // Not available yet. No problem.
+              listener.getLogger().print("Log is not available yet.\n");
+            } else if (code == 416) {
+              // Requested range not satisfiable
+              // No new outputs. No problem.
+            } else if (500 <= code && code < 600) {
+              // Ignore server error.
+              listener.getLogger().printf(
+                  "Could not poll the log for server error: %d %s%n",
+                  code,
+                  e.getStatusMessage()
+              );
+            } else {
+              throw e;
+            }
+          }
+          listener.getLogger().write(out.toByteArray());
+          bytesRead += out.size();
+        } finally {
+          out.close();
+        }
+      }
+    };
   }
 }

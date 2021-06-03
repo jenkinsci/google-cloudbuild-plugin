@@ -212,4 +212,35 @@ public class CloudBuildClientTest {
   public void waitForSuccess_BuildFails() throws Exception {
     testWaitForSuccess(false);
   }
+
+  @Test
+  public void gcsLogUrl() throws Exception {
+    when(transport.buildRequest(eq(HttpMethods.GET),
+                                contains("/v1/projects/test-project/builds/build-42")))
+        .thenReturn(new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+            response.setStatusCode(HttpStatusCodes.STATUS_CODE_OK);
+            response.setContentType(Json.MEDIA_TYPE);
+            response.setContent(json.toString(new Build()
+                .setId("build-42")
+                .setLogsBucket("gs://1234567890.cloudbuild-logs.googleusercontent.com")));
+            return response;
+          }
+        });
+
+    FreeStyleProject project = j.createFreeStyleProject();
+    FreeStyleBuild build = j.assertBuildStatusSuccess(project.scheduleBuild2(0));
+    CloudBuildClient client = cloudBuild(build);
+    LogUtil.LogLocation logLocation = client.getGcsLogUrl("build-42");
+    assertEquals(
+        "1234567890.cloudbuild-logs.googleusercontent.com",
+        logLocation.getBucketName()
+    );
+    assertEquals(
+        "log-build-42.txt",
+        logLocation.getObjectName()
+    );
+  }
 }

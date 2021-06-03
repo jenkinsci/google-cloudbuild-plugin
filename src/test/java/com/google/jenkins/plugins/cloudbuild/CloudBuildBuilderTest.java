@@ -173,4 +173,49 @@ public class CloudBuildBuilderTest {
     assertThat(build.getAction(RepoAction.class).getUrlName(),
         containsString("test-repo/release?project=some-other-project"));
   }
+
+  @Test
+  public void freeStyleProjectWithStreamLog() throws Exception {
+    String requestYaml =
+        "steps:\n" +
+        "- name: alpine";
+    CloudBuildInput input =
+        new CloudBuildInput("test-project", new InlineCloudBuildRequest(requestYaml));
+    RepoCloudBuildSource source = new RepoCloudBuildSource();
+    source.setProjectId("some-other-project");
+    source.setRepoName("test-repo");
+    source.setBranch("release");
+    input.setSource(source);
+    input.setStreamLog(true);
+    project.getBuildersList().add(new CloudBuildBuilder(input));
+
+    project = j.configRoundtrip(project);
+
+    cloud.onStartBuild((build, req, resp) -> {
+      return new Operation()
+          .setName("build-42")
+          .setMetadata(new BuildOperationMetadata()
+              .setBuild(build
+                  .setId("42")
+                  .setLogUrl("https://logurl")
+                  .setLogsBucket("gs://logbucket")));
+    });
+
+    cloud.onCheckBuild((x, req, resp) -> {
+      return new Build()
+          .setId("42")
+          .setStatus("SUCCESS")
+          .setLogUrl("https://logurl")
+          .setLogsBucket("gs://logbucket");
+    });
+
+    cloud.onGetObjectMedia((x, req, resp) -> {
+        assertThat(req.getUrl(), containsString("/b/logbucket/o/log-42.txt"));
+        return "foobar\n";
+    });
+
+    FreeStyleBuild build = j.buildAndAssertSuccess(project);
+
+    j.assertLogContains("foobar\n", build);
+  }
 }

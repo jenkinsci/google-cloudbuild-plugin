@@ -85,6 +85,16 @@ public class MockCloudServices {
   }
 
   /**
+   * Function to serialize response contents from a object
+   *
+   * @param <R> type to serialize the response from
+   */
+  @FunctionalInterface
+  public interface ResponseConverter<R> {
+     String apply(R t) throws IOException;
+  }
+
+  /**
    * Creates a handler for mocking a call to {@link #transport} which checks the authorization
    * token, parses the request object from JSON, calls a user-provided handler, and serializes the
    * response to JSON.
@@ -99,6 +109,11 @@ public class MockCloudServices {
    */
   private <T, R> Answer<MockLowLevelHttpRequest> mockRequest(
       Class<T> clazz, MockRequestHandler<T, R> handler) {
+    return mockRequestBase(clazz, handler, r -> { return json.toString(r); });
+  }
+
+  private <T, R> Answer<MockLowLevelHttpRequest> mockRequestBase(
+      Class<T> clazz, MockRequestHandler<T, R> handler, ResponseConverter<R> converter) {
     return invocation -> new MockLowLevelHttpRequest(invocation.getArgument(1)) {
       @Override
       public LowLevelHttpResponse execute() throws IOException {
@@ -115,11 +130,28 @@ public class MockCloudServices {
         }
         R result = handler.handle(in, this, response);
         if (result != null) {
-          response.setContent(json.toString(result));
+          response.setContent(converter.apply(result));
         }
         return response;
       }
     };
+  }
+
+  /**
+   * Creates a handler for mocking a call to {@link #transport} which checks the authorization
+   * token, parses the request object from JSON, calls a user-provided handler,
+   * and returns plain text.
+   *
+   * @param clazz the class that the request payload is expected to represent, which will be
+   *     deserialized from JSON
+   * @param handler the user-provided handler to invoke
+   * @param <T> the type of the request payload
+   * @return an {@link Answer} to be provided as a mock to handle the corresponding HTTP requests
+   * @see MockHttpTransport#buildRequest(String, String)
+   */
+  private <T> Answer<MockLowLevelHttpRequest> mockRequestReturningPlainText(
+      Class<T> clazz, MockRequestHandler<T, String> handler) {
+    return mockRequestBase(clazz, handler, r -> { return r; });
   }
 
   /**
@@ -182,6 +214,21 @@ public class MockCloudServices {
   public void onUploadObject(MockRequestHandler<Void, StorageObject> handler) throws IOException {
     when(transport.buildRequest(eq(HttpMethods.PUT), matches(".*/upload/storage/v1/b/[^/]+/o.*")))
         .thenAnswer(mockRequest(Void.class, handler));
+  }
+
+  /**
+   * Calls the provided {@code handler} when a request is made to get a object
+   * in a Cloud Storage bucket
+   *
+   * @param handler the handler to call
+   * @throws IOException if an error occurs while setting up the mock
+   */
+  public void onGetObjectMedia(MockRequestHandler<Void, String> handler) throws IOException {
+    when(transport.buildRequest(
+            eq(HttpMethods.GET),
+            matches(".*/storage/v1/b/[^/]+/o/.*\\?.*alt=media.*")
+    ))
+        .thenAnswer(mockRequestReturningPlainText(Void.class, handler));
   }
 
   /**

@@ -55,6 +55,8 @@ public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> im
   @CheckForNull
   private SubstitutionList substitutionList;
 
+  private boolean streamLog;
+
   @DataBoundConstructor
   public CloudBuildInput(@Nonnull String credentialsId, @Nonnull CloudBuildRequest request) {
     this.credentialsId = credentialsId;
@@ -119,6 +121,23 @@ public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> im
   public Map<String, String> getSubstitutionMap(BuildContext context)
       throws IOException, InterruptedException {
     return substitutionList != null ? substitutionList.toMap(context) : Collections.emptyMap();
+  }
+
+  /**
+   * @param streamLog whether to stream log
+   * @since 0.3
+   */
+  @DataBoundSetter
+  public void setStreamLog(boolean streamLog) {
+    this.streamLog = streamLog;
+  }
+
+  /**
+   * @return whether to stream log
+   * @since 0.3
+   */
+  public boolean isStreamLog() {
+    return streamLog;
   }
 
   /** Descriptor for {@link CloudBuildInput}. */
