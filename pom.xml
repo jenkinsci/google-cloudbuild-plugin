@@ -131,6 +131,7 @@
   <properties>
     <java.level>8</java.level>
     <jackson.version>2.9.10</jackson.version>
+    <jackson.databind.version>2.9.10.8</jackson.databind.version>
     <jenkins.version>2.60.1</jenkins.version>
   </properties>
 
@@ -178,7 +179,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
+      <version>${jackson.databind.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
