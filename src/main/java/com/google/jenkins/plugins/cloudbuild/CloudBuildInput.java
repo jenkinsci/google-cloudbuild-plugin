@@ -55,6 +55,9 @@ public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> im
   @CheckForNull
   private SubstitutionList substitutionList;
 
+  @CheckForNull
+  private String proxy;
+
   @DataBoundConstructor
   public CloudBuildInput(@Nonnull String credentialsId, @Nonnull CloudBuildRequest request) {
     this.credentialsId = credentialsId;
@@ -119,6 +122,23 @@ public class CloudBuildInput extends AbstractDescribableImpl<CloudBuildInput> im
   public Map<String, String> getSubstitutionMap(BuildContext context)
       throws IOException, InterruptedException {
     return substitutionList != null ? substitutionList.toMap(context) : Collections.emptyMap();
+  }
+
+  /**
+   * @param proxy proxy to use to connect Google Cloud services.
+   * @since 0.3
+   */
+  @DataBoundSetter
+  public void setProxy(@CheckForNull String proxy) {
+    this.proxy = proxy;
+  }
+
+  /**
+   * @return proxy to use to connect Google Cloud services.
+   */
+  @CheckForNull
+  public String getProxy() {
+    return proxy;
   }
 
   /** Descriptor for {@link CloudBuildInput}. */

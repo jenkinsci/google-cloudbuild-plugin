@@ -20,4 +20,9 @@
   </f:optionalBlock>
   <f:dropdownDescriptorSelector title="${%Request}" field="request" />
   <f:property field="substitutionList"/>
+  <f:advanced>
+    <f:entry field="proxy" title="${%HTTP Proxy}">
+      <f:textbox />
+    </f:entry>
+  </f:advanced>
 </j:jelly>

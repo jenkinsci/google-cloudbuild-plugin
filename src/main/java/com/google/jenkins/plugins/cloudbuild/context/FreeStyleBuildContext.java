@@ -15,6 +15,8 @@ package com.google.jenkins.plugins.cloudbuild.context;
 
 import java.io.IOException;
 
+import javax.annotation.CheckForNull;
+
 import hudson.FilePath;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
@@ -22,12 +24,20 @@ import hudson.model.TaskListener;
 
 /** The context of the currently running Jenkins build. */
 public class FreeStyleBuildContext implements BuildContext {
-  private final AbstractBuild build;
+  private final AbstractBuild<?, ?> build;
   private final BuildListener listener;
+  @CheckForNull
+  private final String proxy;
 
   public FreeStyleBuildContext(AbstractBuild build, BuildListener listener) {
+      this(build, listener, null);
+    }
+
+  public FreeStyleBuildContext(AbstractBuild<?, ?> build,
+      BuildListener listener, @CheckForNull String proxy) {
     this.build = build;
     this.listener = listener;
+    this.proxy = proxy;
   }
 
   @Override
@@ -43,5 +53,11 @@ public class FreeStyleBuildContext implements BuildContext {
   @Override
   public TaskListener getListener() {
     return listener;
+  }
+
+  @Override
+  @CheckForNull
+  public String getProxy() {
+    return proxy;
   }
 }

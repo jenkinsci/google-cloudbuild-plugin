@@ -15,6 +15,8 @@ package com.google.jenkins.plugins.cloudbuild.context;
 
 import java.io.IOException;
 
+import javax.annotation.CheckForNull;
+
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 
 import hudson.FilePath;
@@ -23,9 +25,21 @@ import hudson.model.TaskListener;
 /** The context of the currently running Jenkins build. */
 public class PipelineBuildContext implements BuildContext {
   private final StepContext stepContext;
+  @CheckForNull
+  private final String proxy;
 
   public PipelineBuildContext(StepContext stepContext) {
+    this(stepContext, null);
+  }
+
+  /**
+   * @param stepContext context of pipeline step.
+   * @param proxy proxy to use for Cloud Platform services.
+   * @since 0.3
+   */
+  public PipelineBuildContext(StepContext stepContext, @CheckForNull String proxy) {
     this.stepContext = stepContext;
+    this.proxy = proxy;
   }
 
   @Override
@@ -41,5 +55,11 @@ public class PipelineBuildContext implements BuildContext {
   @Override
   public TaskListener getListener() throws IOException, InterruptedException {
     return stepContext.get(TaskListener.class);
+  }
+
+  @Override
+  @CheckForNull
+  public String getProxy() {
+    return proxy;
   }
 }

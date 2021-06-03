@@ -77,7 +77,7 @@ public final class CloudBuildStepExecution extends StepExecution {
   private void startPolling() {
     task = getExecutorService().submit(() -> {
       try {
-        getClients().cloudBuild().waitForSuccess(buildId);
+        getClients().cloudBuild(input.getProxy()).waitForSuccess(buildId);
         getContext().onSuccess(null);
       } catch (Exception e) {
         getContext().onFailure(e);
@@ -87,8 +87,8 @@ public final class CloudBuildStepExecution extends StepExecution {
 
   @Override
   public boolean start() throws Exception {
-    BuildContext context = new PipelineBuildContext(getContext());
-    buildId = getClients().cloudBuild().sendBuildRequest(
+    BuildContext context = new PipelineBuildContext(getContext(), input.getProxy());
+    buildId = getClients().cloudBuild(input.getProxy()).sendBuildRequest(
         input.getRequest().expand(context),
         input.getSourceOrDefault().prepare(context, getClients()),
         input.getSubstitutionMap(context));
