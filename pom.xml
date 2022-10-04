@@ -131,7 +131,7 @@
   <properties>
     <java.level>8</java.level>
     <jackson.version>2.9.10</jackson.version>
-    <jackson.databind.version>2.9.10.8</jackson.databind.version>
+    <jackson.databind.version>2.12.6.1</jackson.databind.version>
     <jenkins.version>2.60.1</jenkins.version>
   </properties>
 
